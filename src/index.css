@@ -70,10 +70,11 @@
 
 .layout {
   width: calc(min(1280px, 90vw) - 2rem);
-}
-
-#root {
+  height: 100dvh;
   display: grid;
   justify-content: center;
-  height: 100dvh;
+}
+
+* {
+  box-sizing: border-box;
 }
