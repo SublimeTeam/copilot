@@ -67,3 +67,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+.layout {
+  width: calc(min(1280px, 90vw) - 2rem);
+}
+
+#root {
+  display: grid;
+  justify-content: center;
+  height: 100dvh;
+}

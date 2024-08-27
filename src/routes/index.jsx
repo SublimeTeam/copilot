@@ -6,35 +6,36 @@ import { Project } from "../pages/Project";
 import { Solution } from "../pages/Solution";
 
 import { Layout } from "./Layout";
+import { Contact } from "../pages/Contact";
 
 export const routes = createBrowserRouter([
   {
-    path: '/home',
-    element: <Home />
+    path: "/home",
+    element: <Home />,
   },
   {
-    element: <Layout/>,
+    element: <Layout />,
     children: [
       {
-        path: '/',
-        element: <Home />
+        path: "/",
+        element: <Home />,
       },
       {
-        path: '/solution',
-        element: <Solution />
+        path: "/solution",
+        element: <Solution />,
       },
       {
-        path: '/login',
-        element: <Login />
+        path: "/login",
+        element: <Login />,
       },
       {
-        path: '/about-project',
-        element: <Project />
+        path: "/about-project",
+        element: <Project />,
       },
       {
-        path: '/contact-us',
-        element: <Project />
+        path: "/contact",
+        element: <Contact />,
       },
-    ]
-  }
-])
+    ],
+  },
+]);
