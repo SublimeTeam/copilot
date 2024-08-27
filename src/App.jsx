@@ -1,10 +1,11 @@
+import { Button } from './components/Button/button'
 import './App.css'
 
 function App() {
 
   return (
     <div>
-      hello
+      <Button>Teste</Button>
     </div>
   )
 }
