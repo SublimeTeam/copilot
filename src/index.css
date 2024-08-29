@@ -68,11 +68,15 @@
   }
 }
 
-.layout {
-  width: calc(min(1280px, 90vw) - 2rem);
-  height: 100dvh;
-  display: grid;
-  justify-content: center;
+h1,
+h2,
+h3,
+h4 {
+  @apply md:max-w-[75%];
+}
+
+p {
+  @apply max-w-[65ch];
 }
 
 * {

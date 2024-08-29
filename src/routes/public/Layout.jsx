@@ -4,12 +4,11 @@ import {
   NavigationMenuList,
   NavigationMenuItem,
   NavigationMenuLink,
-} from "../components/NavigationMenu";
+} from "../../components/NavigationMenu";
 import { Outlet } from "react-router-dom";
 import { Button } from "@/components/Button";
 import { navigationMenuTriggerStyle } from "@/components/NavigationMenu/styles";
 import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const links = [
   {
@@ -17,11 +16,7 @@ const links = [
     href: "/",
   },
   {
-    title: "Sobre o Projeto",
-    href: "/about-project",
-  },
-  {
-    title: "Avaliação Gratuita",
+    title: "Sobre o projeto",
     href: "/about-project",
   },
 ];
@@ -37,7 +32,7 @@ const Header = () => {
       </div>
       <Separator />
       <div className="flex items-center justify-between">
-        <a href="/contact" className="text-md">
+        <a href="/" className="text-md">
           Copilot
         </a>
         <NavigationMenu>
@@ -51,8 +46,14 @@ const Header = () => {
                 </Link>
               </NavigationMenuItem>
             ))}
+            <NavigationMenuItem>
+              <Link href="/solution" asChild>
+                <NavigationMenuLink>
+                  <Button>Get Started Now</Button>
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
           </NavigationMenuList>
-          <Button>Entrar</Button>
         </NavigationMenu>
       </div>
     </header>
@@ -61,20 +62,18 @@ const Header = () => {
 
 const Footer = () => (
   <footer>
-    This is the <div>footer</div>
+    <div>foooter vem aqui, toma!</div>
   </footer>
 );
 
 export const Layout = () => {
   return (
-    <ScrollArea>
-      <div className="w-[calc(min(1280px,90vw)-2rem)] max-h-[100dvh] mx-auto">
+    <div className="w-full grid justify-center">
+      <div className="w-[calc(min(1100px,94vw)-2rem)]">
         <Header />
-        <main>
-          <Outlet />
-        </main>
+        <Outlet />
         <Footer />
       </div>
-    </ScrollArea>
+    </div>
   );
 };
