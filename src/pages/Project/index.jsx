@@ -1,29 +1,8 @@
+import { Terminal } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { Terminal } from "lucide-react";
 
-const technologies = [
-  {
-    title: "React",
-    description:
-      "Utilizado para construir componentes reutilizáveis e gerenciar o estado da aplicação, tornando a interface mais dinâmica e interativa.",
-  },
-  {
-    title: "HTML, CSS e JavaScript",
-    description:
-      "Construção da estrutura básica das páginas, definir o estilo visual e implementar interações com o usuário.",
-  },
-  {
-    title: "Subalgoritmos",
-    description:
-      "Encapsulamos funcionalidades específicas, tornando o código mais organizado e fácil de entender. Preparado para maior escalabilidade.",
-  },
-  {
-    title: "Estrutura de dados",
-    description:
-      "Arrays e listas foram utilizadas para armazenar e manipular dados, como listas de mensagens, informações do usuário, etc.",
-  },
-];
+import { team, technologies } from "./data";
 
 export const Project = () => {
   return (
@@ -67,22 +46,19 @@ export const Project = () => {
           </p>
         </div>
         <div className="flex gap-6 w-full">
-          {Array.from(Array(4)).map((_, index) => (
+          {team.map(({ name, photo, rm, role }, index) => (
             <div
               className="odd:translate-y-10 flex-1 min-w-28 flex-wrap max-h-min rounded-none border-none"
               key={index}
             >
               <img
-                src="https://github.com/LeandrodeLimaC.png"
-                alt=""
+                src={photo}
                 className="filter grayscale hover:grayscale-0 transition-all"
               />
               <div className="mt-0.5 text-foreground">
-                <p className="text-lg tracking-normal">
-                  Leandro de Lima Cuminato
-                </p>
-                <p className="text-muted-foreground"> Frontend Engineer </p>
-                <p>RM 5560556</p>
+                <p className="text-lg tracking-normal">{name}</p>
+                <p className="text-muted-foreground">{role}</p>
+                <p>{rm}</p>
               </div>
             </div>
           ))}
