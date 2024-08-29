@@ -9,16 +9,15 @@ export const Home = () => {
     <>
       <section className="py-24 min-h-[90dvh]">
         <h1 className="text-6xl mb-6">
-          Copilot leverages{" "}
-          <span className="text-purple-700">generative AI</span> to help you
-          scale your support.
+        Explore o futuro do suporte com{" "}
+          <span className="text-purple-700">IA generativa treinada</span>, potencializando a resolução de incidentes e tarefas.
         </h1>
         <p className="text-md mb-6">
-          Meet the system tailored to help your support perform 80x better.
+        Cansado de sua equipe de suporte perder tempo?
           <br />
-          Enhance your CX—integrate it into your Helpdesk today.
+          O Copiloto ajuda sua equipe a obter respostas em segundos com IA.
         </p>
-        <Button>Get Started</Button>
+        <Button>Comece a avaliação gratuita</Button>
       </section>
       <section className="py-10 pb-36 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-y-20">
         <h2 className="text-6xl">A good thing just got better</h2>
