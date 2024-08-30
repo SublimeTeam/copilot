@@ -47,7 +47,7 @@ const Header = () => {
               </NavigationMenuItem>
             ))}
             <NavigationMenuItem>
-              <Link href="/solution" asChild>
+              <Link href="/login" asChild>
                 <NavigationMenuLink>
                   <Button>Get Started Now</Button>
                 </NavigationMenuLink>
