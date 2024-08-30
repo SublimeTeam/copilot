@@ -7,7 +7,7 @@ export const Login = () => {
       <div className="flex-1 bg-black flex items-center justify-center relative p-4">
         <div className="absolute bottom-4 text-center w-full text-white">
            <p className="text-sm">
-            &ldquo;Ver qual o texto para colocar aqui e se fica massa .&rdquo;
+            &ldquo;Smart work, exceptional results.&rdquo;
            </p>
         </div>
       </div>
@@ -16,10 +16,10 @@ export const Login = () => {
           <div className="flex flex-col  space-y-6">
             <div className="w-full flex flex-col items-center justify-center">
               <h1 className="text-2xl font">
-                Criar uma conta / Entrar
+                 Entrar na sua conta
               </h1>
               <p className="text-sm text-muted-foreground">
-                Digite seu e-mail abaixo para criar ou entrar na conta
+                Digite seu e-mail e senha para entrar na conta
               </p>
             </div>
             <FormsLogin />
