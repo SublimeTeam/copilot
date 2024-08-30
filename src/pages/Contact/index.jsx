@@ -15,9 +15,7 @@ export const Contact = () => {
           Entre em <span className="text-indigo-700">contato</span> conosco
         </h1>
         <p className="text-md">
-          What unites us is relentless focus, fast execution, and our passion
-          for software craftsmanship. We are all makers at heart and care deeply
-          about the quality of our work, down to the smallest detail.
+        Saiba como o Copiloto impulsiona a produtividade de seu suporte ao cliente.
         </p>
       </div>
       <div className="grid grid-cols-2 gap-6">

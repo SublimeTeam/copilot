@@ -49,7 +49,7 @@ const Header = () => {
             <NavigationMenuItem>
               <Link href="/solution" asChild>
                 <NavigationMenuLink>
-                  <Button>Get Started Now</Button>
+                  <Button>Experimente o Copiloto</Button>
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
