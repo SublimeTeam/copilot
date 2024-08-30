@@ -1,17 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import { Solution } from "../pages/Solution";
 import publicRoutes from "./public/routes.public";
+import privateRoutes from "./private/routes.private";
 
-export const routes = createBrowserRouter([
-  {
-    path: "/solution",
-    children: [
-      {
-        path: "/solution",
-        element: <Solution />,
-      },
-    ],
-  },
-  publicRoutes,
-]);
+export const routes = createBrowserRouter([privateRoutes, publicRoutes]);

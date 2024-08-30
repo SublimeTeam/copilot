@@ -23,27 +23,27 @@ export const technologies = [
 
 export const team = [
   {
-    name: "Leandro de Lima Cuminato",
-    photo: "team/leandro.jpeg",
-    rm: "RM 5560556",
-    role: "Frontend Engineer",
+    name: "Edson Felix Marques",
+    photo: "team/edson.jpeg",
+    rm: "RM 554918",
+    role: "Software Engineer",
   },
   {
     name: "Leandro de Lima Cuminato",
     photo: "team/leandro.jpeg",
     rm: "RM 5560556",
-    role: "Frontend Engineer",
+    role: "Software Engineer",
   },
   {
-    name: "Leandro de Lima Cuminato",
-    photo: "team/leandro.jpeg",
-    rm: "RM 5560556",
-    role: "Frontend Engineer",
+    name: "Mabel Krüger de Souza",
+    photo: "team/mabel.jpeg",
+    rm: "RM 556422",
+    role: "Software Engineer",
   },
   {
-    name: "Leandro de Lima Cuminato",
-    photo: "team/leandro.jpeg",
-    rm: "RM 5560556",
-    role: "Frontend Engineer",
+    name: "Pedro Henrique Ramondini Palmeira",
+    photo: "team/pedro.jpeg",
+    rm: "RM 558700",
+    role: "Software Engineer",
   },
 ];

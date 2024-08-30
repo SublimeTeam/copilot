@@ -9,24 +9,22 @@ export const Home = () => {
     <>
       <section className="py-24 min-h-[90dvh]">
         <h1 className="text-6xl mb-6">
-          Copilot leverages{" "}
-          <span className="text-purple-700">generative AI</span> to help you
-          scale your support.
+        Explore o futuro do suporte com{" "}
+          <span className="text-purple-700">IA generativa treinada</span>, potencializando a resolução de incidentes e tarefas.
         </h1>
         <p className="text-md mb-6">
-          Meet the system tailored to help your support perform 80x better.
+        Cansado de sua equipe de suporte perder tempo?
           <br />
-          Enhance your CX—integrate it into your Helpdesk today.
+          O Copiloto ajuda sua equipe a obter respostas em segundos com IA.
         </p>
-        <Button>Get Started</Button>
+        <Button>Comece a avaliação gratuita</Button>
       </section>
       <section className="py-10 pb-36 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-y-20">
-        <h2 className="text-6xl">A good thing just got better</h2>
+        <h2 className="text-6xl">Descubra o potencial da IA com o Copiloto.</h2>
         <p className="text-md mb-6 md:self-end md:place-self-end">
-          Meet the system tailored to help your support perform 80x better.
+        Aumente a eficiência de seu time de suporte, utilizando inteligência artificial integrado ao seu processo de Helpdesk e Gestão de Tickets.
           <br />
-          Enhance your CX—integrate it into your Helpdesk today.
-        </p>
+                  </p>
         {videos.map(({ title, url, preview }, index) => (
           <a href={url} target="__blank" key={index}>
             <Card className="overflow-hidden">
@@ -46,13 +44,19 @@ export const Home = () => {
       </section>
       <section className="flex flex-col md:py-24 md:flex-row md:justify-between md:items-end">
         <h2 className="text-6xl mb-6">
-          Smart work, <br /> exceptional results
+        <i>“Agora, fornecemos respostas 30% mais rápidas, aumentando <br /> a produtividade por agente..”</i>
         </h2>
+        <p className="text-md mb-6 md:self-end md:place-self-end">
+        <strong>XU Miragaia</strong>, gerente de serviços (atendimento digital ao cliente), Tesla
+          <br />
+                  </p>
+                  <br />
         <div>
-          <Button>Get started</Button>
-          <Button variant="secondary">Talk to sales</Button>
+          <Button>Experimente o Copiloto</Button>
+          <Button variant="secondary">Fale com um especialista</Button>
         </div>
       </section>
+      
     </>
   );
 };
