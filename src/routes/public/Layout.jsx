@@ -8,7 +8,7 @@ import {
 import { Outlet } from "react-router-dom";
 import { Button } from "@/components/Button";
 import { navigationMenuTriggerStyle } from "@/components/NavigationMenu/styles";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const links = [
   {
@@ -22,6 +22,10 @@ const links = [
   {
     title: "Sobre o projeto",
     href: "/about-project",
+  },
+  {
+    title: "Entrar",
+    href: "/login",
   },
 ];
 
@@ -47,9 +51,9 @@ const Header = () => {
             </NavigationMenuItem>
           ))}
           <NavigationMenuItem>
-            <Link href="/login" asChild>
+            <Link href="/solution" asChild>
               <NavigationMenuLink>
-                <Button onClick={() => navigate("/login")}>
+                <Button onClick={() => navigate("/solution")}>
                   Experimente o Copiloto
                 </Button>
               </NavigationMenuLink>
@@ -108,10 +112,7 @@ const Footer = () => {
 };
 
 export const Layout = () => {
-  const location = useLocation();
-  return location.pathname.includes("login") ? (
-    <Outlet />
-  ) : (
+  return (
     <div className="w-full grid justify-center">
       <div className="w-[calc(min(1100px,94vw)-2rem)]">
         <Header />
