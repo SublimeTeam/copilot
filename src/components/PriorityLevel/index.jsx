@@ -5,7 +5,7 @@ export const PriorityLevel = () => {
   return (
     <Chip>
       <Tally4 size={16} />
-      High Priority
+      Alta Prioridade
     </Chip>
   );
 };

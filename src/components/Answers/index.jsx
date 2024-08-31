@@ -17,7 +17,7 @@ export const MockAnswer1 = () => {
               ticket.
             </li>
             <li>
-              <strong>Motivo da alteração do perfil:</strong> "O usuário deixou
+              <strong>Motivo do chamado:</strong> "O usuário deixou
               a empresa."
             </li>
             <li>
@@ -117,7 +117,7 @@ export const MockAnswer2 = () => {
               ticket.
             </li>
             <li>
-              <strong>Motivo da alteração do perfil:</strong> "O usuário se
+              <strong>Motivo do chamado:</strong> "O usuário se
               aposentou."
             </li>
             <li>
@@ -217,7 +217,7 @@ export const MockAnswer3 = () => {
               ticket.
             </li>
             <li>
-              <strong>Motivo do reset de senha do perfil:</strong> "Utilização do SAP"
+              <strong>Motivo do chamado:</strong> "Reset de Senha"
             </li>
             <li>
               <strong>Tipo e Grupo de acesso:</strong> Grupo de administração.
@@ -315,7 +315,7 @@ export const MockAnswer4 = () => {
               ticket.
             </li>
             <li>
-              <strong>Motivo da alteração do perfil:</strong> "Licença Office Expirada."
+              <strong>Motivo do chamado:</strong> "Licença Office Expirada."
             </li>
             <li>
               <strong>Tipo e Grupo de acesso:</strong> Grupo de desenvolvedores.

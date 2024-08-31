@@ -18,10 +18,10 @@ export const WelcomeWithOpenTickets = () => {
   return (
     <>
       <h1 className="text-5xl text-muted-foreground pt-16 font-semibold mb-14">
-        <span className="text-primary ">Hello, Leandro</span>
+        <span className="text-primary ">Olá, Edson</span>
         <br />
         <span className="text-4xl text-muted-foreground">
-          which ticket can I help you with?
+        Como posso ajudar você?
         </span>
       </h1>
       <div className="flex gap-3 min-w-fit">

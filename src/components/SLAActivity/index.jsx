@@ -8,7 +8,7 @@ export const SLAActivity = ({ level = 0 }) => {
     { container: "bg-red-400", text: "text-red-500" },
   ];
 
-  const text = ["On track", "At risk", "Off track"];
+  const text = ["Normal", "Em Risco", "SLA Violado"];
 
   return (
     <div className={clsx("flex items-center gap-1", colors[level].text)}>

@@ -13,7 +13,7 @@ export const Suggestions = ({ ticketId }) => {
         text: "Suggestions based on this ticket",
         suggestions: tickets2[ticketId].suggestions,
       }
-    : { text: "Suggestions based on open tickets", suggestions };
+    : { text: "Sugestões baseadas em tickets abertos", suggestions };
 
   return (
     data.suggestions && (

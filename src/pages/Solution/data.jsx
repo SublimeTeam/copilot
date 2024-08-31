@@ -58,7 +58,7 @@ export const tickets2 = {
       "Impressora com problemas",
     ],
     messages: [
-      <Ticket ticketId="TASK0948367" key={0} />,
+      <Ticket ticketId="TASK0948362" key={0} />,
       <MockAnswer2 key={1} />,
     ],
   },
@@ -72,7 +72,7 @@ export const tickets2 = {
     resolvedAt: null,
     reportCategory: "Outros Sistemas",
     reportSubcategory: "Adapt",
-    symptom: "Funcional SAP",
+    symptom: "Reset de Senha",
     symptomQualification: "",
     assignmentGroup: "N2-LEG-SAT",
     category: "AMS-Não SAP",
@@ -80,7 +80,7 @@ export const tickets2 = {
     closedAt: "01/05/2024 18:00:04",
     taskRequester: "ADM Sistemas",
     location: "Fábrica 1",
-    description: "Funcional SAP",
+    description: "Reset de Senha",
     resolution: "Solução aplicada: Resete de senha",
     messages: [
       <Ticket ticketId="TASK0948364" key={0} />,
@@ -111,9 +111,9 @@ TASK0948366: {
   description: "Reset de Senha",
   resolution: "Solução aplicada: Criação de menu novo",
   messages: [
-    <Ticket ticketId="TASK0948367" key={0} />,
+    <Ticket ticketId="TASK0948366" key={0} />,
     "Ola","Tudo certo?", "Também estou bem. Como posso te ajudar hoje?", "Estou tendo dificuldades, preciso resetar minha senha. Você pode me ajudar a abrir um chamado técnico?",
-    <MockAnswer3 key={1} />,
+    <MockAnswer4 key={1} />,
   ],
 },
 TASK0340364: {
@@ -137,7 +137,7 @@ TASK0340364: {
   description: "Ativar Licença",
   resolution: "Solução aplicada: Reiniciado serviço de database",
   messages: [
-    <Ticket ticketId="TASK0948367" key={0} />,
+    <Ticket ticketId="TASK0340364" key={0} />,
     "Ola","Tudo certo?", "Também estou bem. Como posso te ajudar hoje?", "Estou tendo dificuldades com o sistema e não consigo acessar o Office, o sistema apresenta senha expirada?",
     <MockAnswer4 key={1} />,
   ],

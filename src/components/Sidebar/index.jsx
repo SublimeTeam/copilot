@@ -25,7 +25,7 @@ export const SideBar = () => {
 
       <div>
         <h4 className="px-4 pt-3 pb-2 uppercase text-muted-foreground text-xs font-bold">
-          recents
+        Recentes
         </h4>
         <ul className="list-none p-0">
           {Object.entries(tickets2).map(([id, value]) => (
