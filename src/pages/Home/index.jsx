@@ -41,7 +41,7 @@ export const Home = () => {
         {videos.map(({ title, url, preview }, index) => (
           <a href={url} target="__blank" key={index}>
             <Card className="overflow-hidden">
-              <div className="relative text-muted-foreground hover:text-white">
+              <div className="relative text-muted-foreground hover:text-white  max-h-64 overflow-hidden">
                 <Play className="absolute inset-0 m-auto text-inherit z-10 size-10" />
                 <img
                   src={preview}
