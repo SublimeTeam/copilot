@@ -62,7 +62,7 @@ export function FormsLogin({ className, ...props }) {
             </h3>
             <Input
               id="email"
-              placeholder="name@example.com"
+              placeholder="exemplo@exemplo.com"
               type="email"
               autoCapitalize="none"
               autoComplete="email"
@@ -104,7 +104,7 @@ export function FormsLogin({ className, ...props }) {
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-background px-2 text-muted-foreground">
-            Ou entre em contato 
+            Ou
           </span>
         </div>
       </div>

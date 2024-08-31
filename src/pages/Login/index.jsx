@@ -5,11 +5,9 @@ export const Login = () => {
   return (
     <div className="flex h-screen">
       <div className="flex-1 bg-black flex items-center justify-center relative p-4">
-        <div className="absolute bottom-4 text-center w-full text-white">
-           <p className="text-sm">
-            &ldquo;Smart work, exceptional results.&rdquo;
-           </p>
-        </div>
+         <div className="absolute inset-0 flex items-center justify-center text-center text-white">
+           <h2 className="text-6xl">Descubra o potencial da IA com o Copiloto.</h2>
+         </div>
       </div>
       <div className="flex-1 flex items-center justify-center bg-white p-8">
         <div className="w-full max-w-md">
@@ -19,7 +17,7 @@ export const Login = () => {
                  Entrar na sua conta
               </h1>
               <p className="text-sm text-muted-foreground">
-                Digite seu e-mail e senha para entrar na conta
+                Digite seu e-mail e senha para acessar sua conta
               </p>
             </div>
             <FormsLogin />
