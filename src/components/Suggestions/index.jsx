@@ -10,7 +10,7 @@ const suggestions = [
 export const Suggestions = ({ ticketId }) => {
   const data = ticketId
     ? {
-        text: "Suggestions based on this ticket",
+        text: "Sugestões baseadas neste ticket",
         suggestions: tickets2[ticketId].suggestions,
       }
     : { text: "Sugestões baseadas em tickets abertos", suggestions };

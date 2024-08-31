@@ -49,7 +49,7 @@ export const Solution = () => {
             >
               <input
                 id="question"
-                placeholder="What you would like to ask?"
+                placeholder="O que você gostaria de perguntar?"
                 className="py-3 indent-1 text-sm w-full border-none outline-none focus-visible:outline-none"
               />
               <div className="inline-flex gap-2 pr-1">
