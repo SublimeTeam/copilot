@@ -26,24 +26,24 @@ export const team = [
     name: "Edson Felix Marques",
     photo: "team/edson.jpeg",
     rm: "RM 554918",
-    role: "Software Engineer",
+    role: "Revisão e Priorização das features",
   },
   {
     name: "Leandro de Lima Cuminato",
     photo: "team/leandro.jpeg",
     rm: "RM 5560556",
-    role: "Software Engineer",
+    role: "Prototipação e Desenvolvimento das telas",
   },
   {
     name: "Mabel Krüger de Souza",
     photo: "team/mabel.jpeg",
     rm: "RM 556422",
-    role: "Software Engineer",
+    role: "Desenvolvimento das telas",
   },
   {
     name: "Pedro Henrique Ramondini Palmeira",
     photo: "team/pedro.jpeg",
     rm: "RM 558700",
-    role: "Software Engineer",
+    role: "Produção do vídeo",
   },
 ];

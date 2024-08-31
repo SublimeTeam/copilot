@@ -11,11 +11,12 @@ export const Contact = () => {
   return (
     <section className="py-24 bg-background text-foreground">
       <div className="mb-20">
-        <h1 className="text-6xl pb-6">
+        <h1 className="text-5xl pb-6">
           Entre em <span className="text-indigo-700">contato</span> conosco
         </h1>
         <p className="text-md">
-        Saiba como o Copiloto impulsiona a produtividade de seu suporte ao cliente.
+          Saiba como o Copiloto impulsiona a produtividade de seu suporte ao
+          cliente.
         </p>
       </div>
       <div className="grid grid-cols-2 gap-6">

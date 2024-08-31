@@ -8,10 +8,10 @@ export const Project = () => {
   return (
     <>
       <section className="py-24 gap-6">
-        <div className="flex justify-between pb-20 items-end">
-          <h1 className="text-6xl flex-1">
-            Construido <span className="text-indigo-700">sobre firmes</span>
-            <br /> fundações
+        <div className="flex justify-between pb-20 items-end gap-8">
+          <h1 className="text-5xl flex-1">
+            Construído sob <span className="text-indigo-700">sólidas</span>{" "}
+            fundações
           </h1>
           <p className="max-w-[60ch] flex-1">
             O desenvolvimento do projeto contou com a aplicação de diversas
@@ -35,11 +35,15 @@ export const Project = () => {
         <p className="text-xs text-muted-foreground">TEAM</p>
         <Separator className="mt-2 mb-9" />
         <div className="flex flex-col gap-6 mb-10">
-          <h2 className="text-6xl">
-            Conheça <span className="text-indigo-700">o time</span> por detrás do projeto
+          <h2 className="text-5xl">
+            Conheça <span className="text-indigo-700">o time</span> responsável
+            pelo projeto
           </h2>
           <p className="text-md">
-          O que nos une é a nossa dedicação incansável, a execução ágil e a paixão vibrante pela criação de software. Somos criadores de coração e nos entregamos de corpo e alma à excelência, cuidando com esmero até dos menores detalhes.
+            O que nos une é a nossa dedicação incansável, a execução ágil e a
+            paixão vibrante pela criação de software. Somos criadores de coração
+            e nos entregamos de corpo e alma à excelência, cuidando com esmero
+            até dos menores detalhes.
           </p>
         </div>
         <div className="flex gap-6 w-full">
