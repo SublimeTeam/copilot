@@ -14,7 +14,6 @@ export const Layout = () => {
   return (
     <div className="grid grid-cols-[auto_1fr] h-screen w-full">
       <SideBar />
-
       <Outlet />
     </div>
   );
