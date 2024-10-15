@@ -1,13 +1,17 @@
 import { Plus, MessageSquare } from "lucide-react";
 import { Button } from "../Button/index";
 import { useNavigate } from "react-router-dom";
-import { tickets2 } from "@/pages/Solution/data";
 import clsx from "clsx";
-import { useParams } from "react-router-dom";
+import { useConversation } from "@/contexts/ConversationContext";
 
 export const SideBar = () => {
-  const { id: idFromParams } = useParams();
   const navigate = useNavigate();
+  const {
+    conversations,
+    activeConversationId,
+    createNewConversation,
+    setActiveConversationId,
+  } = useConversation();
 
   return (
     <div className="bg-black min-w-72">
@@ -17,7 +21,7 @@ export const SideBar = () => {
           <div className="size-3 rounded-full bg-primary" />
           <div className="size-3 rounded-full bg-primary" />
         </div>
-        <Button onClick={() => navigate("/solution/new")}>
+        <Button onClick={createNewConversation}>
           <Plus className="mr-2" />
           New chat
         </Button>
@@ -25,23 +29,26 @@ export const SideBar = () => {
 
       <div>
         <h4 className="px-4 pt-3 pb-2 uppercase text-muted-foreground text-xs font-bold">
-        Recentes
+          Conversas Recentes
         </h4>
         <ul className="list-none p-0">
-          {Object.entries(tickets2).map(([id, value]) => (
+          {conversations.map((conversation) => (
             <li
-              key={id}
+              key={conversation.id}
               className={clsx(
                 "flex items-center gap-2 pl-6 py-2 hover:bg-accent text-muted-foreground cursor-pointer",
-                { "bg-accent": id === idFromParams }
+                { "bg-accent": conversation.id === activeConversationId }
               )}
-              onClick={() => navigate(`/solution/${id}`)}
+              onClick={() => {
+                setActiveConversationId(conversation.id);
+                navigate(`/solution/chat/${conversation.id}`);
+              }}
             >
               <MessageSquare size={16} />
               <div className="flex flex-col whitespace-nowrap pr-10 max-w-60">
-                <p className="text-sm">{id}</p>
+                <p className="text-sm">{conversation.id}</p>
                 <div className="text-sm font-medium text-ellipsis overflow-hidden">
-                  {value.description}
+                  {conversation.title}
                 </div>
               </div>
             </li>

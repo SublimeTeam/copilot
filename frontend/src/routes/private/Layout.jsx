@@ -1,5 +1,6 @@
 import { LoggedInUserAvatar } from "@/components/LoggedInUserAvatar/index";
 import { SideBar } from "@/components/Sidebar/index";
+import { ConversationProvider } from "@/contexts/ConversationContext";
 import { Outlet } from "react-router-dom";
 
 export const Header = () => {
@@ -13,8 +14,10 @@ export const Header = () => {
 export const Layout = () => {
   return (
     <div className="grid grid-cols-[auto_1fr] h-screen w-full">
-      <SideBar />
-      <Outlet />
+      <ConversationProvider>
+        <SideBar />
+        <Outlet />
+      </ConversationProvider>
     </div>
   );
 };
