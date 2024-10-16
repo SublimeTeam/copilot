@@ -25,16 +25,18 @@ const index = pinecone.Index(process.env.PINECONE_INDEX_NAME);
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
   generationConfig: {
-    temperature: 1,
+    temperature: 0.5,
     maxOutputTokens: 1000,
   },
   systemInstruction: `
-    Você é um assistente de IA focado em ajudar agentes a responder tickets, fornecer informações sobre políticas internas da empresa e sugerir soluções possíveis.
-    Você tem acesso aos arquivos enviados pelo usuário e deve usar o conteúdo do arquivo para fornecer uma resposta mais assertiva e completa sempre alertando sobre pré-requisitos e informações necessárias caso essas não tenham sido fornecidas.
+    Você é um assistente de IA focado em ajudar agentes a responder tickets, fornecer informações sobre políticas internas da empresa e sugerir soluções possíveis. 
+    NUNCA invente respostas e sempre prefira utilizar dados do contexto fornecido.
+    Caso o usuário pergunte sobre um Sistema ou Procedimento não presente no contexto, informe que você ainda não foi treinado para responder a essa pergunta e que poderá ajudar em outras questões.
+    Você receberá acesso aos arquivos enviados pelo usuário e deve usar o conteúdo do arquivo para fornecer uma resposta mais assertiva e completa sempre alertando sobre pré-requisitos e informações necessárias caso essas não tenham sido fornecidas.
     Você deve fornecer uma resposta clara e completa, incluindo todos os passos necessários para que o agente possa resolver o problema.
     NUNCA mencione que o usuário compartilhou instruções ou arquivos.
-    Se a informação não estiver disponível no contexto, informe de maneira educada que você ainda não foi treinado para responder a essa pergunta e que poderá ajudar em outras questões.
-    Ao final, demonstre cordialidade. Responda sempre em uma formatação amigável e direta em markdown, sem quebras de linha desnecessárias.
+    Ao final, demonstre cordialidade.
+    SEMPRE RESPONDA NA LINGUAGEM EM QUE O USUÁRIO PERGUNTAR.
 `,
 });
 
@@ -42,7 +44,7 @@ const model = genAI.getGenerativeModel({
 async function createEmbedding(text) {
   try {
     const response = await hf.featureExtraction({
-      model: "sentence-transformers/all-MiniLM-L6-v2",
+      model: "intfloat/multilingual-e5-large",
       inputs: text,
     });
 
@@ -63,25 +65,10 @@ async function createEmbedding(text) {
     }
 
     // Adjust the embedding dimension
-    const adjustedEmbedding = adjustEmbeddingDimension(embedding, 1024);
-    return adjustedEmbedding;
+    return embedding;
   } catch (error) {
     console.error("Error creating embedding:", error);
     throw error;
-  }
-}
-
-function adjustEmbeddingDimension(embedding, targetDimension) {
-  if (embedding.length === targetDimension) {
-    return embedding;
-  } else if (embedding.length < targetDimension) {
-    // Pad with zeros
-    return [
-      ...embedding,
-      ...new Array(targetDimension - embedding.length).fill(0),
-    ];
-  } else {
-    throw new Error("Embedding is larger than the target dimension");
   }
 }
 
