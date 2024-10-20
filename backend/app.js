@@ -4,12 +4,17 @@ const { Pinecone } = require("@pinecone-database/pinecone");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { HfInference } = require("@huggingface/inference");
 const dotenv = require("dotenv");
-const fs = require("fs");
 const mammoth = require("mammoth");
+const cors = require("cors"); // Import the cors package
 
 dotenv.config();
 
+const chats = [];
+
+const PORT = process.env.PORT || 3000;
+
 const app = express();
+app.use(cors()); // Enable CORS for all routes
 const upload = multer({ dest: "uploads/" });
 
 // Initialize clients
@@ -23,21 +28,11 @@ const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
 const index = pinecone.Index(process.env.PINECONE_INDEX_NAME);
 
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
+  model: "gemini-1.5-pro",
   generationConfig: {
-    temperature: 0.5,
-    maxOutputTokens: 1000,
+    temperature: 1,
+    maxOutputTokens: 5000,
   },
-  systemInstruction: `
-    Você é um assistente de IA focado em ajudar agentes a responder tickets, fornecer informações sobre políticas internas da empresa e sugerir soluções possíveis. 
-    NUNCA invente respostas e sempre prefira utilizar dados do contexto fornecido.
-    Caso o usuário pergunte sobre um Sistema ou Procedimento não presente no contexto, informe que você ainda não foi treinado para responder a essa pergunta e que poderá ajudar em outras questões.
-    Você receberá acesso aos arquivos enviados pelo usuário e deve usar o conteúdo do arquivo para fornecer uma resposta mais assertiva e completa sempre alertando sobre pré-requisitos e informações necessárias caso essas não tenham sido fornecidas.
-    Você deve fornecer uma resposta clara e completa, incluindo todos os passos necessários para que o agente possa resolver o problema.
-    NUNCA mencione que o usuário compartilhou instruções ou arquivos.
-    Ao final, demonstre cordialidade.
-    SEMPRE RESPONDA NA LINGUAGEM EM QUE O USUÁRIO PERGUNTAR.
-`,
 });
 
 // Função para criar embeddings usando Hugging Face
@@ -117,38 +112,99 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 // Endpoint para enviar mensagens
 app.post("/message", express.json(), async (req, res) => {
   try {
-    const { message } = req.body;
+    let { chatId, message } = req.body;
+
+    if (!chatId) {
+      chatId = Date.now().toString(); // Create a new chat ID if not provided
+    }
+
     const messageEmbedding = await createEmbedding(message);
 
-    // Buscar documentos relevantes no Pinecone
+    console.log("messageEmbedding", messageEmbedding);
+
     const queryResponse = await index.query({
       vector: messageEmbedding,
       topK: 3,
       includeMetadata: true,
     });
 
-    // Preparar o contexto para o Gemini
-    const context = queryResponse.matches
+    const fileContext = queryResponse.matches
       .map((match) => match.metadata.content)
       .join(" ");
 
-    // Gerar resposta com o Gemini
-    const prompt = `
-      Contexto: ${context}
+    // adiciona a conversa ao array de conversas ou atualiza a existente
+    let chat = chats.find((chat) => chat.chatId === chatId);
 
-      Pergunta do usuário: ${message}
+    if (chat) {
+      chat.messages.push({ role: "user", content: message });
+    } else {
+      chat = { chatId, messages: [{ role: "user", content: message }] };
+      chats.push(chat);
+    }
+
+    // Combine file context with chat history
+    const chatHistory = chat.messages
+      .map((msg) => `${msg.role}: ${msg.content}`)
+      .join("\n");
+
+    const combinedContext = `
+      Answer the question or message in a natural and conversational manner. Use the provided context to inform your response when applicable, but feel free to engage in general conversation when the message is not a question or does not require specific context.
+      You should always use INSTRUÇÃO DE TRABALHO (IT) as a base to answer questions related to work instructions providing as much information as possible, but for general conversation, respond appropriately.
+      Always answer in the same language of the question. and avoid talking about random topics.
+
+      Context: ${fileContext}
+      
+      Chat history: ${chatHistory}
+      
+      Question/Message: ${message}
+      
+      Answer in markdown format, using bold, italic, and other markdown formatting options when needed.Make sure to use a valid markdown formatting for the response. and substitute space scape for three spaces to create a new line.
+      Answer:
     `;
 
-    const result = await model.generateContent(prompt);
+    let result;
+    if (chat.geminiChat) {
+      result = await chat.geminiChat.generateContent(combinedContext);
+    } else {
+      result = await model.generateContent(combinedContext);
+    }
+
     const response = await result.response;
 
-    res.json({ response: response.text() });
+    // adicione a resposta da IA ao array de mensagens do chat
+    chat.messages.push({ role: "assistant", content: response.text() });
+    res.json({ response: response.text(), chatId });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-const PORT = process.env.PORT || 3000;
+function adjustEmbeddingDimension(embedding, targetDimension) {
+  if (embedding.length === targetDimension) {
+    return embedding;
+  } else if (embedding.length < targetDimension) {
+    // Pad with zeros
+    return [
+      ...embedding,
+      ...new Array(targetDimension - embedding.length).fill(0),
+    ];
+  } else {
+    throw new Error("Embedding is larger than the target dimension");
+  }
+}
+
+// Endpoint para listar todas as conversas
+app.get("/chats", (req, res) => {
+  res.json(chats);
+});
+
+// Endpoint para criar uma nova conversa
+app.post("/chats", (req, res) => {
+  const newChat = { chatId: Date.now().toString(), messages: [] };
+  chats.push(newChat);
+  res.status(201).json(newChat);
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });

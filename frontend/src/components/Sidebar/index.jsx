@@ -23,7 +23,7 @@ export const SideBar = () => {
         </div>
         <Button onClick={createNewConversation}>
           <Plus className="mr-2" />
-          New chat
+          Nova conversa
         </Button>
       </div>
 
@@ -34,21 +34,21 @@ export const SideBar = () => {
         <ul className="list-none p-0">
           {conversations.map((conversation) => (
             <li
-              key={conversation.id}
+              key={conversation.chatId}
               className={clsx(
                 "flex items-center gap-2 pl-6 py-2 hover:bg-accent text-muted-foreground cursor-pointer",
-                { "bg-accent": conversation.id === activeConversationId }
+                { "bg-accent": conversation.chatId === activeConversationId }
               )}
               onClick={() => {
-                setActiveConversationId(conversation.id);
-                navigate(`/solution/chat/${conversation.id}`);
+                setActiveConversationId(conversation.chatId);
+                navigate(`/solution/chat/${conversation.chatId}`);
               }}
             >
               <MessageSquare size={16} />
               <div className="flex flex-col whitespace-nowrap pr-10 max-w-60">
                 <p className="text-sm">{conversation.id}</p>
                 <div className="text-sm font-medium text-ellipsis overflow-hidden">
-                  {conversation.title}
+                  {conversation.messages[-1]?.content ?? conversation.chatId}
                 </div>
               </div>
             </li>

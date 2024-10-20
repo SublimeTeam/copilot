@@ -1,57 +1,57 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { isAIConfigured, model } from "@/config/ai";
+import axios from "../axiosConfig"; // Import the configured axios instance
+import { useParams } from "react-router-dom";
 
 const ConversationContext = createContext();
 
 export const useConversation = () => useContext(ConversationContext);
 
-const persistConversations = (conversations) => {
-  localStorage.setItem("conversations", JSON.stringify(conversations));
-};
-
-const loadConversations = () => {
-  const conversations = localStorage.getItem("conversations");
-  return conversations ? JSON.parse(conversations) : [];
-};
-
 export const ConversationProvider = ({ children }) => {
+  // id da conversa ativa atavés da url
+  const { id } = useParams();
   const [conversations, setConversations] = useState([]);
-  const [activeConversationId, setActiveConversationId] = useState(null);
+  const [activeConversationId, setActiveConversationId] = useState(id);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const persistedConversations = loadConversations();
-    setConversations(persistedConversations);
-  }, []);
-
-  useEffect(() => {
-    if (conversations.length > 0) {
-      persistConversations(conversations);
-    }
-  }, [conversations]);
-
-  const createNewConversation = async () => {
-    const newChat = await model.startChat({
-      generationConfig: {
-        maxOutputTokens: 100,
-      },
-    });
-
-    const newConversation = {
-      id: Date.now(),
-      chat: newChat,
-      messages: [],
-      title: `Nova conversa ${conversations.length + 1}`,
+    // Fetch existing chats from the backend
+    const fetchConversations = async () => {
+      try {
+        const response = await axios.get("/chats");
+        if (Array.isArray(response.data)) {
+          setConversations(response.data);
+        } else {
+          console.error("Expected an array but got:", typeof response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching conversations:", error);
+      }
     };
 
-    setConversations([...conversations, newConversation]);
-    setActiveConversationId(newConversation.id);
+    fetchConversations();
+  }, []);
+
+  const createNewConversation = async () => {
+    try {
+      const response = await axios.post("/chats");
+
+      const newConversation = {
+        chatId: response.data.chatId,
+        messages: [],
+        title: `Nova conversa ${conversations.length + 1}`,
+      };
+
+      setConversations([...conversations, newConversation]);
+      setActiveConversationId(newConversation.chatId);
+    } catch (error) {
+      console.error("Error creating new conversation:", error);
+    }
   };
 
   const addMessageToConversation = (conversationId, { role, content }) => {
     setConversations((prevConversations) =>
       prevConversations.map((conv) =>
-        conv.id === conversationId
+        conv.chatId === conversationId
           ? { ...conv, messages: [...conv.messages, { role, content }] }
           : conv
       )
@@ -61,39 +61,23 @@ export const ConversationProvider = ({ children }) => {
   const sendMessage = async (message) => {
     if (!message.trim() || !activeConversationId) return;
 
-    console.log("conversations", { conversations });
-
     const userMessage = { role: "user", content: message };
     addMessageToConversation(activeConversationId, userMessage);
 
     setIsLoading(true);
 
     try {
-      if (!isAIConfigured) {
-        throw new Error(
-          "AI is not configured. Please set the VITE_GOOGLE_AI_API_KEY environment variable."
-        );
-      }
+      const response = await axios.post("/message", {
+        chatId: activeConversationId,
+        message,
+      });
 
-      const activeConversation = conversations.find(
-        (conv) => conv.id === activeConversationId
-      );
+      const aiResponse = { role: "assistant", content: response.data.response };
 
-      const result = await activeConversation.chat.sendMessage(message);
-      const response = await result.response;
-      const aiResponse = { role: "ai", content: response.text() };
-
+      console.log({ aiResponse });
       addMessageToConversation(activeConversationId, aiResponse);
     } catch (error) {
-      console.error("Error generating AI response:", error);
-
-      const aiMessage = {
-        role: "ai",
-        content:
-          "Sorry, I encountered an error. Please make sure the AI is properly configured and try again.",
-      };
-
-      addMessageToConversation(activeConversationId, aiMessage);
+      console.error("Error sending message:", error);
     } finally {
       setIsLoading(false);
     }
