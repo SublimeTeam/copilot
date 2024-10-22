@@ -16,7 +16,10 @@ export const Layout = () => {
     <div className="grid grid-cols-[auto_1fr] h-screen w-full">
       <ConversationProvider>
         <SideBar />
-        <Outlet />
+        <div className="flex w-full justify-center bg-background flex-col max-h-screen">
+          <Header />
+          <Outlet />
+        </div>
       </ConversationProvider>
     </div>
   );

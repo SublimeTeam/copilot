@@ -4,19 +4,23 @@ import { Layout } from "./Layout";
 import { Chat } from "@/pages/Chat/index";
 
 export default {
-  path: "/solution",
+  path: "/chat",
   element: <Layout />,
   children: [
     {
-      path: "/solution",
+      path: "/chat/solution",
       element: <Solution />,
     },
     {
-      path: "/solution/:id",
+      path: "/chat/solution/:id",
       element: <Solution />,
     },
     {
-      path: "/solution/chat/:id",
+      path: "/chat",
+      element: <Chat />,
+    },
+    {
+      path: "/chat/:id",
       element: <Chat />,
     },
   ],

@@ -41,14 +41,14 @@ export const SideBar = () => {
               )}
               onClick={() => {
                 setActiveConversationId(conversation.chatId);
-                navigate(`/solution/chat/${conversation.chatId}`);
+                navigate(`${conversation.chatId}`);
               }}
             >
               <MessageSquare size={16} />
               <div className="flex flex-col whitespace-nowrap pr-10 max-w-60">
                 <p className="text-sm">{conversation.id}</p>
                 <div className="text-sm font-medium text-ellipsis overflow-hidden">
-                  {conversation.messages[-1]?.content ?? conversation.chatId}
+                  {conversation.messages[-1]?.content ?? conversation.title}
                 </div>
               </div>
             </li>

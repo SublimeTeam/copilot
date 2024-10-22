@@ -1,15 +1,20 @@
 import { BotAvatar } from "../BotAvatar/index";
 import { LoggedInUserAvatar } from "../LoggedInUserAvatar/index";
+import Markdown from "react-markdown";
 
 export const Messages = ({ messages }) => {
   return (
-    <div className="flex flex-col gap-10 pt-5 pb-10">
+    <ul className="contents">
       {messages.map((message, index) => (
-        <div key={index} className="flex odd:flex-row-reverse gap-2">
-          {!(index % 2) ? <LoggedInUserAvatar /> : <BotAvatar />}
-          <p className="mt-1">{message}</p>
-        </div>
+        <li key={index} className="list-none">
+          <div className="flex gap-2">
+            {message.role === "user" ? <LoggedInUserAvatar /> : <BotAvatar />}
+            <Markdown className="max-w-[55ch] rounded-lg  pt-[.35rem]">
+              {message.content}
+            </Markdown>
+          </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };

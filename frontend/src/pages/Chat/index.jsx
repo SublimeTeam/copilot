@@ -1,47 +1,44 @@
+import { MessageInput } from "@/components/MessageInput/index";
+import { Messages } from "@/components/Messages/index";
+import { Suggestions } from "@/components/Suggestions/index";
 import { WelcomeWithOpenTickets } from "@/components/WelcomeWithOpenTickets/index";
 import { useConversation } from "@/contexts/ConversationContext";
-import Markdown from "react-markdown";
 
 export const Chat = () => {
   const { conversations, activeConversationId, isLoading, sendMessage } =
     useConversation();
 
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    const message = e.target.elements.message.value;
-    e.target.reset();
+  const handleSendMessage = async (message) => {
     await sendMessage(message);
   };
 
   const activeConversation = conversations.find(
-    (conv) => conv.chatId == activeConversationId
+    (conv) => conv?.chatId == activeConversationId
   );
 
-  const conversationHasMessages = activeConversation?.messages.length > 0;
-
   return (
-    <div>
-      <h2>{activeConversation.chatId}</h2>
-      {conversationHasMessages ? (
-        <div>
-          <ul>
-            {activeConversation.messages.map((message, index) => (
-              <Markdown key={index}>{message.content}</Markdown>
-            ))}
-          </ul>
-
-          {isLoading && <p>Carregando...</p>}
+    <>
+      <div className="overflow-auto flex-1 ">
+        <div className="mx-auto flex flex-col max-w-[660px] gap-8">
+          {activeConversation ? (
+            <Messages messages={activeConversation?.messages} />
+          ) : (
+            <WelcomeWithOpenTickets />
+          )}
         </div>
-      ) : (
-        <WelcomeWithOpenTickets />
-      )}
-      <div>
-        <form onSubmit={handleSendMessage}>
-          <input type="text" name="message" placeholder="digite sua mensagem" />
-          <button type="submit">Enviar</button>
-        </form>
       </div>
-    </div>
+
+      <div>
+        <div>{isLoading && <p>Carregando...</p>}</div>
+        {activeConversation?.suggestions && (
+          <Suggestions
+            suggestions={activeConversation.suggestions}
+            onSuggestionClick={handleSendMessage}
+          />
+        )}
+        <MessageInput onSubmit={handleSendMessage} />
+      </div>
+    </>
   );
 };
 
