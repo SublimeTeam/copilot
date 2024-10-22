@@ -22,7 +22,7 @@ export function FormsLogin({ className, ...props }) {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate("/solution");
+    navigate("/chat");
   };
 
   const handleEmailChange = (event) => {
