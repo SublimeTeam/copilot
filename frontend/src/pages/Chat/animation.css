@@ -1,23 +1,26 @@
 .loading {
     display: inline-block;
-    font-size: 24px; /* Ajuste o tamanho conforme necessário */
+    /* font-size: 14px; Ajuste o tamanho conforme necessário */
   }
   
   .dot {
     display: inline-block;
-    animation: jump 0.6s infinite alternate;
+    animation: jump 0.4s infinite alternate;
+    font-size: 24px;
   }
   
   .dot:nth-child(2) {
     animation-delay: 0.2s;
+    font-size: 24px;
   }
   
   .dot:nth-child(3) {
     animation-delay: 0.4s;
+    font-size: 24px;
   }
   
   @keyframes jump {
     0% { transform: translateY(0); }
-    100% { transform: translateY(-3px); } /* Ajuste a altura do salto */
+    100% { transform: translateY(-1px); } /* Ajuste a altura do salto */
   }
   

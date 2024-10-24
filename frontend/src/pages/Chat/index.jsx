@@ -19,7 +19,7 @@ export const Chat = () => {
 
   return (
     <>
-      <div className="overflow-auto flex-1 ">
+      <div className="overflow-auto flex-1">
         <div className="mx-auto flex flex-col max-w-[660px] gap-8">
           {activeConversation ? (
             <Messages messages={activeConversation?.messages} />
@@ -30,10 +30,10 @@ export const Chat = () => {
       </div>
 
       <div>
-        <div>
+        <div className="pt-5">
           {isLoading && (
             <p className="loading">
-              Carregando
+              Copilot está digitando
               <span className="dot">.</span>
               <span className="dot">.</span>
               <span className="dot">.</span>
