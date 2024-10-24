@@ -3,7 +3,6 @@ import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/utils";
-import { navigationMenuTriggerStyle } from "./styles";
 
 const NavigationMenu = React.forwardRef(
   ({ className, children, ...props }, ref) => (
@@ -40,7 +39,7 @@ const NavigationMenuTrigger = React.forwardRef(
   ({ className, children, ...props }, ref) => (
     <NavigationMenuPrimitive.Trigger
       ref={ref}
-      className={cn(navigationMenuTriggerStyle(), "group", className)}
+      className={cn("group", className)}
       {...props}
     >
       {children}{" "}
