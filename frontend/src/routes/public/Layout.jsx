@@ -51,9 +51,9 @@ const Header = () => {
             </NavigationMenuItem>
           ))}
           <NavigationMenuItem>
-            <Link href="/solution" asChild>
+            <Link href="/chat" asChild>
               <NavigationMenuLink>
-                <Button onClick={() => navigate("/solution")}>
+                <Button onClick={() => navigate("/chat")}>
                   Experimente o Copiloto
                 </Button>
               </NavigationMenuLink>
