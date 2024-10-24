@@ -28,7 +28,12 @@ export const Chat = () => {
         </div>
       </div>
 
-      <div>
+      <div
+        style={{
+          boxShadow: "rgb(255 255 255) 0px -20px 70px 4px",
+        }}
+        className="mx-auto w-[75ch] z-10 "
+      >
         <div>{isLoading && <p>Carregando...</p>}</div>
         {activeConversation?.suggestions && (
           <Suggestions
