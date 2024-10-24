@@ -29,7 +29,12 @@ export const Chat = () => {
         </div>
       </div>
 
-      <div>
+      <div
+        style={{
+          boxShadow: "rgb(255 255 255) 0px -20px 70px 4px",
+        }}
+        className="mx-auto w-[75ch] z-10 "
+      >
         <div className="pt-5">
           {isLoading && (
             <p className="loading">
@@ -46,7 +51,13 @@ export const Chat = () => {
             onSuggestionClick={handleSendMessage}
           />
         )}
-        <MessageInput onSubmit={handleSendMessage} />
+        <div className="text-center mb-1">
+          <MessageInput onSubmit={handleSendMessage} />
+          <div className="text-xs text-muted-foreground mb-2 indent-2 pl-2">
+            O Copilot pode apresentar erros. Certifique-se de revisar
+            informações críticas com atenção.
+          </div>
+        </div>
       </div>
     </>
   );

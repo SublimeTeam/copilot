@@ -1,54 +1,73 @@
-import { ImagePlus, Mic } from "lucide-react";
-import { useRef } from "react";
-import React, { useState } from "react";
+import { Send } from "lucide-react";
+import { Button } from "../Button/index";
+import { useState, useRef, useCallback } from "react";
 
-
-export const MessageInput = ({ onSubmit }) => {
+export const MessageInput = ({ onSubmit, disabled }) => {
+  const [message, setMessage] = useState("");
   const inputRef = useRef(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const message = e.target.elements.message.value;
-    e.target.reset();
-    onSubmit(message);
-  };
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (message.trim()) {
+        onSubmit(message);
+        setMessage("");
+        if (inputRef.current) {
+          inputRef.current.style.height = "100%";
+        }
+      }
+    },
+    [message, onSubmit]
+  );
+
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        handleSubmit(e);
+      }
+    },
+    [handleSubmit]
+  );
+
+  const handleInput = useCallback((e) => {
+    setMessage(e.target.value);
+    e.target.style.height = "auto";
+    e.target.style.height = `${Math.min(e.target.scrollHeight, 144)}px`;
+    e.target.style.overflowY =
+      e.target.scrollHeight > 144 ? "scroll" : "hidden";
+  }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="h-32 bottom-0 bg-primary-foreground">
-        <div className="mx-auto w-[75ch]">
-          <label
-            htmlFor="message"
-            className="px-3 border rounded-full flex items-center overflow-hidden"
-          >
-            <input
-              id="message"
-              ref={inputRef}
-              name="message"
-              autoComplete="off"
-              placeholder="O que você gostaria de perguntar?"
-              className="py-3 indent-1 text-sm w-full border-none outline-none focus-visible:outline-none"
-            />
-            <div className="inline-flex gap-2 pr-1">
-              <button
-                type="button"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <ImagePlus size={18} />
-              </button>
-              <button
-                type="button"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <Mic size={18} /> 
-              </button>
-            </div>
-            {inputRef.current?.value && <button type="submit">Enviar</button>}
-          </label>
-          <br />
-          <div class="relative w-full px-2 py-2 text-center text-xs text-token-text-secondary empty:hidden md:px-[60px]"><div class="min-h-4"><div>O Copilot pode apresentar erros. Certifique-se de revisar informações críticas com atenção.</div></div></div>
-        </div>
-      </div>
+    <form
+      disabled={disabled}
+      onSubmit={handleSubmit}
+      className="mb-2 pl-3 border rounded-md flex items-center overflow-hidden"
+    >
+      <label htmlFor="message" className="flex items-center w-full h-full">
+        <textarea
+          disabled={disabled}
+          id="message"
+          ref={inputRef}
+          name="message"
+          value={message}
+          onChange={handleInput}
+          onKeyDown={handleKeyDown}
+          autoComplete="off"
+          placeholder="O que você gostaria de perguntar?"
+          className="py-3 indent-1 text-sm w-full border-none outline-none focus-visible:outline-none resize-none overflow-y-auto"
+          rows="1"
+          style={{ minHeight: "100%", maxHeight: "144px" }}
+        />
+      </label>
+      <Button
+        disabled={disabled}
+        size="icon"
+        type="submit"
+        className="rounded-md m-1"
+      >
+        <Send size={18} />
+      </Button>
     </form>
   );
 };
