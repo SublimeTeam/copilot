@@ -287,6 +287,32 @@ app.get("/chats", (req, res) => {
   res.json(chats);
 });
 
+// endpoint to soft delete a chat
+app.delete("/chats/:chatId", (req, res) => {
+  const { chatId } = req.params;
+  const chatIndex = chats.findIndex((chat) => chat.chatId === chatId);
+
+  if (chatIndex !== -1) {
+    chats[chatIndex].deleted_at = new Date().toISOString();
+    res.json({ message: "Conversa marcada como deletada com sucesso" });
+  } else {
+    res.status(404).json({ message: "Conversa não encontrada" });
+  }
+});
+
+// endpoint to pin a chat
+app.patch("/chats/:chatId/pin", (req, res) => {
+  const { chatId } = req.params;
+  const chatIndex = chats.findIndex((chat) => chat.chatId === chatId);
+
+  if (chatIndex !== -1) {
+    chats[chatIndex].pinned = true;
+    res.json({ message: "Conversa marcada como fixada com sucesso" });
+  } else {
+    res.status(404).json({ message: "Conversa não encontrada" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
