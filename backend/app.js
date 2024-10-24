@@ -32,9 +32,9 @@ const optimizeMessage = (message) => {
 
 const chatAi = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const chatAIModel = chatAi.getGenerativeModel({
-  model: "gemini-1.5-flash",
+  model: "gemini-1.5-pro",
   generationConfig: {
-    temperature: 0.7,
+    temperature: 1,
     maxOutputTokens: 5000,
   },
 });
@@ -43,7 +43,7 @@ const flashAi = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const flashAIModel = flashAi.getGenerativeModel({
   model: "gemini-1.5-flash",
   generationConfig: {
-    temperature: 0,
+    temperature: 1,
     maxOutputTokens: 2000,
   },
 });
@@ -216,7 +216,7 @@ app.post("/message", express.json(), async (req, res) => {
       Answer the question or message in a natural and conversational manner. Use the provided context to inform your response when applicable, but feel free to engage in general conversation when the message is not a question or does not require specific context.
       You should always use the Context information as a base to answer questions related to work instructions providing as much information as possible, but for general conversation, respond appropriately.
       Use the same language of the question. and avoid talking about random topics.
-      Never ask the user to contact the support.
+      Never ask the user to contact the support because he is a support agent.
 
       Context: ${fileContext}
       
@@ -224,7 +224,7 @@ app.post("/message", express.json(), async (req, res) => {
       
       Question/Message: ${optimizedMessage}
       
-      Answer in markdown format, using bold, italic, and other markdown formatting options to make the response more readable NEVER use html tags. Make sure to use a valid markdown formatting for the response. and substitute space scape for three spaces to create a new line.
+      Answer in markdown format, using markdown formatting options to make the response more readable. NEVER use html tags such as code, pre, etc. And substitute space scape for three spaces to create a new line. 
       Answer:
     `;
 
@@ -241,19 +241,18 @@ app.post("/message", express.json(), async (req, res) => {
 
     const chatHistoryWithResponse = `${chatHistory}\n${response.text()}`;
 
-    // create
     const suggestionContext = `
-      Generate up to 4 relevant questions that the user may ask you, based on the context.
-      Only include questions about content from the context.
-      If you can't generate any suggestions, return an empty string. Keep it concise, no full sentences, use plain text. 
-      All suggestions should be comma-separated and start with the first word capitalized.
+      Predict up to 4 relevant questions that the user may ask you by reading the context and chat history.
+      Only include questions relevant to the chat history and context.
+      If you can't generate any suggestions, return an empty string. Keep it concise, no long sentences, use plain text. 
+      All suggestions should start with the first word capitalized.
       Never include questions that was already asked or answered in the chat history.
 
       Context: ${fileContext}
 
       Chat history: ${chatHistoryWithResponse}
 
-      Answer should match the chat history language
+      Answer should match the chat history language and be comma-separated like this: "Question 1, Question 2, Question 3, Question 4"
       Answer:
     `;
 

@@ -1,10 +1,12 @@
-import { Plus, MessageSquare } from "lucide-react";
+import { MessageSquare, Bot, Search, Plus } from "lucide-react";
 import { Button } from "../Button/index";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { useConversation } from "@/contexts/ConversationContext";
+import { useState } from "react";
+import { Sidebar } from "../ui/sidebar";
 
-export const SideBar = () => {
+export const AppSidebar = () => {
   const navigate = useNavigate();
   const {
     conversations,
@@ -12,53 +14,84 @@ export const SideBar = () => {
     createNewConversation,
     setActiveConversationId,
   } = useConversation();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredConversations = conversations.filter((conversation) =>
+    conversation?.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (!conversations.length) return <div></div>;
 
   return (
-    <div className="bg-black min-w-72">
-      <div className="flex flex-col gap-6 px-4 py-3">
-        <div className="inline-flex gap-1 mx-1">
-          <div className="size-3 rounded-full bg-primary" />
-          <div className="size-3 rounded-full bg-primary" />
-          <div className="size-3 rounded-full bg-primary" />
-        </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
-        <img src="/copilot.png" alt="Copiloto" style={{ width: "50px", height: "auto" }} />
-        <span style={{ marginLeft: "10px", fontSize: "16px", color: "white" }}>Copiloto</span>
-        </div>
-        <Button onClick={createNewConversation}>
-          <Plus className="mr-2" />
-          Nova conversa
-        </Button>
-      </div>
-
-      <div>
-        <h4 className="px-4 pt-3 pb-2 uppercase text-muted-foreground text-xs font-bold">
-          Conversas Recentes
-        </h4>
-        <ul className="list-none p-0">
-          {conversations.map((conversation) => (
-            <li
-              key={conversation.chatId}
-              className={clsx(
-                "flex items-center gap-2 pl-6 py-2 hover:bg-accent text-muted-foreground cursor-pointer",
-                { "bg-accent": conversation.chatId === activeConversationId }
-              )}
-              onClick={() => {
-                setActiveConversationId(conversation.chatId);
-                navigate(`${conversation.chatId}`);
-              }}
+    <Sidebar>
+      <div className="bg-black  tracking-wide">
+        <div className="flex flex-col gap-5">
+          <div className="flex items-center justify-between px-4 pt-3">
+            <div className="flex items-center text-muted-foreground gap-2">
+              <Bot
+                color="white"
+                size={32}
+                className="p-1.5 bg-primary rounded-md"
+              />
+              <span className="text-sm  ">Copiloto</span>
+            </div>
+            <Button
+              onClick={createNewConversation}
+              size="sm"
+              className="max-w-40 rounded-md"
+              title="Criar nova conversa"
             >
-              <MessageSquare size={16} />
-              <div className="flex flex-col whitespace-nowrap pr-10 max-w-60">
-                <p className="text-sm">{conversation.id}</p>
-                <div className="text-sm font-medium text-ellipsis overflow-hidden">
-                  {conversation.messages[-1]?.content ?? conversation.title}
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+              <Plus size={16} />
+            </Button>
+          </div>
+
+          <hr className="border-primary" />
+
+          <div className="flex flex-col gap-5 px-4">
+            <label className=" flex items-center gap-2 border border-primary rounded-md focus-within:border-gray-300/20 bg-primary">
+              <Search size={18} className="ml-4 text-muted-foreground" />
+              <input
+                placeholder="Pesquisar..."
+                className="p-2 bg-transparent focus:outline-none w-full placeholder:text-muted-foreground text-white text-sm"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </label>
+
+            <div>
+              <h4 className="indent-2  text-muted-foreground text-xs font-bold  mb-3">
+                Recentes
+              </h4>
+              <ul className="list-none p-0 m-0">
+                {filteredConversations.map((conversation) => (
+                  <li
+                    key={conversation.chatId}
+                    className={clsx(
+                      "flex items-center gap-2 px-4 py-1 mb-0.5 rounded-sm hover:bg-primary text-muted-foreground cursor-pointer relative",
+                      {
+                        "text-white":
+                          conversation.chatId === activeConversationId,
+                      }
+                    )}
+                    onClick={() => {
+                      setActiveConversationId(conversation.chatId);
+                      navigate(`${conversation.chatId}`);
+                    }}
+                  >
+                    <MessageSquare className="min-w-4 w-4" />
+                    <span
+                      className="text-xs tracking-wider text-ellipsis overflow-hidden text-nowrap"
+                      title={conversation.title}
+                    >
+                      {conversation.title}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </Sidebar>
   );
 };

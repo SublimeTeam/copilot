@@ -6,10 +6,10 @@ export const Messages = ({ messages }) => {
   return (
     <ul className="contents">
       {messages.map((message, index) => (
-        <li key={index} className="list-none">
-          <div className="flex gap-2">
+        <li key={index} className="list-none last:mb-10">
+          <div className="flex gap-4">
             {message.role === "user" ? <LoggedInUserAvatar /> : <BotAvatar />}
-            <Markdown className="max-w-[55ch] rounded-lg  pt-[.35rem]">
+            <Markdown className="w-[65ch] rounded-lg  pt-[.35rem]">
               {message.content}
             </Markdown>
           </div>

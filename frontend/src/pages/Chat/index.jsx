@@ -19,7 +19,7 @@ export const Chat = () => {
   return (
     <>
       <div className="overflow-auto flex-1 ">
-        <div className="mx-auto flex flex-col max-w-[660px] gap-8">
+        <div className="mx-auto flex flex-col w-[660px] gap-8">
           {activeConversation ? (
             <Messages messages={activeConversation?.messages} />
           ) : (
