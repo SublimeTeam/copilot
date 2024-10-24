@@ -14,11 +14,15 @@ export const Messages = ({ messages }) => {
     <ul className="contents">
       {messages.map((message, index) => (
         <li key={index} className="list-none mb-4 last:mb-10">
-          <div className={`flex gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+          <div
+            className={`flex gap-4 ${
+              message.role === "user" ? "justify-end" : "justify-start"
+            }`}
+          >
             {message.role === "user" ? (
               <>
                 <div className="max-w-[55ch] rounded-lg text-right">
-                  <Markdown>{message.content}</Markdown>
+                  <Markdown className="pt-[.35rem]">{message.content}</Markdown>
                 </div>
                 <LoggedInUserAvatar />
               </>
@@ -26,7 +30,7 @@ export const Messages = ({ messages }) => {
               <>
                 <BotAvatar />
                 <div className="max-w-[55ch] rounded-lg text-left">
-                  <Markdown className="w-[65ch] rounded-lg pt-[.35rem]">
+                  <Markdown className="w-[55ch] rounded-lg pt-[.35rem]">
                     {message.content}
                   </Markdown>
                 </div>
