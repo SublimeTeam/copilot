@@ -61,7 +61,10 @@ const Header = () => {
   return (
     <header className="flex items-center justify-between">
       <a href="/" className="text-md">
-        Copilot
+      <div style={{ display: "flex", alignItems: "center" }}>
+      <img src="/copilot.png" alt="Copiloto" style={{ width: "50px", height: "auto" }} />
+      <span style={{ marginLeft: "10px", fontSize: "16px" }}>Copiloto</span>
+</div>
       </a>
       <Navigation />
     </header>
