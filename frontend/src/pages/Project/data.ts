@@ -26,12 +26,12 @@ export const team = [
     name: "Edson Felix Marques",
     photo: "team/edson.jpeg",
     rm: "RM 554918",
-    role: "Revisão e Priorização das features",
+    role: "Revisão e Desenvolvimento de melhorias nas telas",
   },
   {
     name: "Leandro de Lima Cuminato",
     photo: "team/leandro.jpeg",
-    rm: "RM 5560556",
+    rm: "RM 556035",
     role: "Prototipação e Desenvolvimento das telas",
   },
   {

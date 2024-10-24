@@ -1,5 +1,7 @@
 import { ImagePlus, Mic } from "lucide-react";
 import { useRef } from "react";
+import React, { useState } from "react";
+
 
 export const MessageInput = ({ onSubmit }) => {
   const inputRef = useRef(null);
@@ -38,11 +40,13 @@ export const MessageInput = ({ onSubmit }) => {
                 type="button"
                 className="text-muted-foreground hover:text-foreground"
               >
-                <Mic size={18} />
+                <Mic size={18} /> 
               </button>
             </div>
             {inputRef.current?.value && <button type="submit">Enviar</button>}
           </label>
+          <br />
+          <div class="relative w-full px-2 py-2 text-center text-xs text-token-text-secondary empty:hidden md:px-[60px]"><div class="min-h-4"><div>O Copilot pode apresentar erros. Certifique-se de revisar informações críticas com atenção.</div></div></div>
         </div>
       </div>
     </form>
