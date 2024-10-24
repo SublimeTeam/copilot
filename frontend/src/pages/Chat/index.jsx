@@ -3,6 +3,7 @@ import { Messages } from "@/components/Messages/index";
 import { Suggestions } from "@/components/Suggestions/index";
 import { WelcomeWithOpenTickets } from "@/components/WelcomeWithOpenTickets/index";
 import { useConversation } from "@/contexts/ConversationContext";
+import "@/pages/Chat/animation.css";
 
 export const Chat = () => {
   const { conversations, activeConversationId, isLoading, sendMessage } =
@@ -34,7 +35,16 @@ export const Chat = () => {
         }}
         className="mx-auto w-[75ch] z-10 "
       >
-        <div>{isLoading && <p>Carregando...</p>}</div>
+        <div className="pt-5">
+          {isLoading && (
+            <p className="loading">
+              Copilot está digitando
+              <span className="dot">.</span>
+              <span className="dot">.</span>
+              <span className="dot">.</span>
+            </p>
+          )}
+        </div>
         {activeConversation?.suggestions && (
           <Suggestions
             suggestions={activeConversation.suggestions}
