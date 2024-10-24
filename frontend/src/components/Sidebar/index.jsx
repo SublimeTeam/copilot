@@ -21,6 +21,10 @@ export const SideBar = () => {
           <div className="size-3 rounded-full bg-primary" />
           <div className="size-3 rounded-full bg-primary" />
         </div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+        <img src="/copilot.png" alt="Copiloto" style={{ width: "50px", height: "auto" }} />
+        <span style={{ marginLeft: "10px", fontSize: "16px", color: "white" }}>Copiloto</span>
+        </div>
         <Button onClick={createNewConversation}>
           <Plus className="mr-2" />
           Nova conversa

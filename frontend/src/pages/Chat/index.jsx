@@ -41,7 +41,13 @@ export const Chat = () => {
             onSuggestionClick={handleSendMessage}
           />
         )}
-        <MessageInput onSubmit={handleSendMessage} />
+        <div className="text-center mb-1">
+          <MessageInput onSubmit={handleSendMessage} />
+          <div className="text-xs text-muted-foreground mb-2 indent-2 pl-2">
+            O Copilot pode apresentar erros. Certifique-se de revisar
+            informações críticas com atenção.
+          </div>
+        </div>
       </div>
     </>
   );

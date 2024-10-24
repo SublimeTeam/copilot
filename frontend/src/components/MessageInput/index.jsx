@@ -42,7 +42,7 @@ export const MessageInput = ({ onSubmit, disabled }) => {
     <form
       disabled={disabled}
       onSubmit={handleSubmit}
-      className="mb-10 pl-3 border rounded-md flex items-center overflow-hidden"
+      className="mb-2 pl-3 border rounded-md flex items-center overflow-hidden"
     >
       <label htmlFor="message" className="flex items-center w-full h-full">
         <textarea
