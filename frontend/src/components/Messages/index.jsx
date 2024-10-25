@@ -46,9 +46,9 @@ export const Messages = ({ messages }) => {
             ) : (
               <>
                 <BotAvatar />
-                <div className="max-w-[55ch] rounded-lg text-left">
+                <div className="max-w-[55ch] rounded-lg text-left relative bg-gray-100 p-2">
                   <Markdown
-                    className="w-[55ch] rounded-lg pt-[.35rem]"
+                    className="w-full rounded-lg pt-[.35rem] pr-[2rem] break-words"
                     components={{
                       code: ({ node, ...props }) => <span {...props} />,
                       pre: ({ node, ...props }) => <span {...props} />,
@@ -58,7 +58,7 @@ export const Messages = ({ messages }) => {
                   </Markdown>
                   <button
                     onClick={() => handleCopy(message.content, index)}
-                    className="ml-2 bg-transparent text-sm text-blue-500 transition-transform transform hover:scale-110"
+                    className="absolute right-2 top-2 bg-transparent text-sm text-blue-500 transition-transform transform hover:scale-110"
                     aria-label="Copiar"
                     style={{ transition: "transform 0.2s ease-in-out" }}
                   >
