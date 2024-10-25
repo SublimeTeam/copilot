@@ -1,10 +1,10 @@
-import { MessageSquare, Bot, Search, Plus } from "lucide-react";
+import { MessageSquare, Bot, Search, Plus, Library } from "lucide-react";
 import { Button } from "../Button/index";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { useConversation } from "@/contexts/ConversationContext";
 import { useState } from "react";
-import { Sidebar } from "../ui/sidebar";
+import { Sidebar, SidebarMenuButton } from "../ui/sidebar";
 
 export const AppSidebar = () => {
   const navigate = useNavigate();
@@ -24,8 +24,8 @@ export const AppSidebar = () => {
 
   return (
     <Sidebar>
-      <div className="bg-black  tracking-wide">
-        <div className="flex flex-col gap-5">
+      <div className="bg-black  tracking-wide h-full">
+        <div className="flex flex-col gap-5 h-full">
           <div className="flex items-center justify-between px-4 pt-3">
             <div className="flex items-center text-muted-foreground gap-2">
               <Bot
@@ -47,7 +47,7 @@ export const AppSidebar = () => {
 
           <hr className="border-primary" />
 
-          <div className="flex flex-col gap-5 px-4">
+          <div className="flex flex-col gap-5 px-4 flex-1 h-full">
             <label className=" flex items-center gap-2 border border-primary rounded-md focus-within:border-gray-300/20 bg-primary">
               <Search size={18} className="ml-4 text-muted-foreground" />
               <input
@@ -89,6 +89,15 @@ export const AppSidebar = () => {
                 ))}
               </ul>
             </div>
+          </div>
+
+          <hr className="border-primary" />
+
+          <div className="flex flex-col gap-5 px-4 pb-4">
+            <SidebarMenuButton onClick={() => navigate("/chat/files")}>
+              <Library size={16} />
+              Base de conhecimento
+            </SidebarMenuButton>
           </div>
         </div>
       </div>

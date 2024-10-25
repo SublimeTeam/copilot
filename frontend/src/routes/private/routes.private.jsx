@@ -2,11 +2,16 @@ import { Solution } from "@/pages/Solution/index";
 
 import { Layout } from "./Layout";
 import { Chat } from "@/pages/Chat/index";
+import { Files } from "@/pages/Files/index";
 
 export default {
   path: "/chat",
   element: <Layout />,
   children: [
+    {
+      path: "/chat/files",
+      element: <Files />,
+    },
     {
       path: "/chat/solution",
       element: <Solution />,

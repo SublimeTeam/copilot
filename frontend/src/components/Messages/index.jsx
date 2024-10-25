@@ -31,7 +31,15 @@ export const Messages = ({ messages }) => {
             {message.role === "user" ? (
               <>
                 <div className="max-w-[55ch] rounded-lg text-right">
-                  <Markdown className="pt-[.35rem]">{message.content}</Markdown>
+                  <Markdown
+                    className="pt-[.35rem]"
+                    components={{
+                      code: ({ node, ...props }) => <span {...props} />,
+                      pre: ({ node, ...props }) => <span {...props} />,
+                    }}
+                  >
+                    {message.content}
+                  </Markdown>
                 </div>
                 <LoggedInUserAvatar />
               </>
@@ -39,7 +47,13 @@ export const Messages = ({ messages }) => {
               <>
                 <BotAvatar />
                 <div className="max-w-[55ch] rounded-lg text-left">
-                  <Markdown className="w-[55ch] rounded-lg pt-[.35rem]">
+                  <Markdown
+                    className="w-[55ch] rounded-lg pt-[.35rem]"
+                    components={{
+                      code: ({ node, ...props }) => <span {...props} />,
+                      pre: ({ node, ...props }) => <span {...props} />,
+                    }}
+                  >
                     {message.content}
                   </Markdown>
                   <button
