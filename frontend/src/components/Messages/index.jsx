@@ -34,13 +34,13 @@ export const Messages = ({ messages }) => {
             ) : (
               <>
                 <BotAvatar />
-                <div className="max-w-[55ch] rounded-lg text-left relative flex items-center">
-                  <Markdown className="w-[65ch] rounded-lg pt-[.35rem]">
+                <div className="max-w-[55ch] rounded-lg text-left relative bg-gray-100 p-2">
+                  <Markdown className="rounded-lg pt-[.35rem] pr-[2rem] w-full break-words">
                     {message.content}
                   </Markdown>
                   <button
                     onClick={() => handleCopy(message.content, index)}
-                    className="ml-2 bg-transparent text-sm text-blue-500 transition-transform transform hover:scale-110"
+                    className="absolute right-2 top-2 bg-transparent text-sm text-blue-500 transition-transform transform hover:scale-110"
                     aria-label="Copiar"
                     style={{ transition: "transform 0.2s ease-in-out" }}
                   >
