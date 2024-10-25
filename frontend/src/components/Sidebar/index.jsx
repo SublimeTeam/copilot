@@ -5,6 +5,9 @@ import clsx from "clsx";
 import { useConversation } from "@/contexts/ConversationContext";
 import { useState } from "react";
 import { Sidebar, SidebarMenuButton } from "../ui/sidebar";
+import { Pin } from "lucide-react";
+import { PinOff } from 'lucide-react';
+import "@/components/Sidebar/sideBar.css";
 
 export const AppSidebar = () => {
   const navigate = useNavigate();
@@ -13,6 +16,7 @@ export const AppSidebar = () => {
     activeConversationId,
     createNewConversation,
     setActiveConversationId,
+    togglePinConversation,
   } = useConversation();
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -20,11 +24,14 @@ export const AppSidebar = () => {
     conversation?.title?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const pinnedConversations = filteredConversations.filter((conv) => conv.pinned);
+  const regularConversations = filteredConversations.filter((conv) => !conv.pinned);
+
   if (!conversations.length) return <div></div>;
 
   return (
     <Sidebar>
-      <div className="bg-black  tracking-wide h-full">
+      <div className="bg-black tracking-wide h-full">
         <div className="flex flex-col gap-5 h-full">
           <div className="flex items-center justify-between px-4 pt-3">
             <div className="flex items-center text-muted-foreground gap-2">
@@ -33,7 +40,7 @@ export const AppSidebar = () => {
                 size={32}
                 className="p-1.5 bg-primary rounded-md"
               />
-              <span className="text-sm  ">Copiloto</span>
+              <span className="text-sm">Copiloto</span>
             </div>
             <Button
               onClick={createNewConversation}
@@ -48,7 +55,7 @@ export const AppSidebar = () => {
           <hr className="border-primary" />
 
           <div className="flex flex-col gap-5 px-4 flex-1 h-full">
-            <label className=" flex items-center gap-2 border border-primary rounded-md focus-within:border-gray-300/20 bg-primary">
+            <label className="flex items-center gap-2 border border-primary rounded-md focus-within:border-gray-300/20 bg-primary">
               <Search size={18} className="ml-4 text-muted-foreground" />
               <input
                 placeholder="Pesquisar..."
@@ -59,11 +66,56 @@ export const AppSidebar = () => {
             </label>
 
             <div>
-              <h4 className="indent-2  text-muted-foreground text-xs font-bold  mb-3">
+              {pinnedConversations.length > 0 && (
+                <>
+                  <h5 className="indent-2 text-muted-foreground text-xs font-bold mb-2">
+                    Fixadas
+                  </h5>
+                  <ul className="list-none p-0 m-0">
+                    {pinnedConversations.map((conversation) => (
+                      <li
+                        key={conversation.chatId}
+                        className={clsx(
+                          "flex items-center gap-2 px-4 py-1 mb-0.5 rounded-sm hover:bg-primary text-muted-foreground cursor-pointer relative",
+                          {
+                            "text-white":
+                              conversation.chatId === activeConversationId,
+                          }
+                        )}
+                        onClick={() => {
+                          setActiveConversationId(conversation.chatId);
+                          navigate(`${conversation.chatId}`);
+                        }}
+                      >
+                        <MessageSquare className="min-w-4 w-4" />
+                        <span
+                          className="text-xs tracking-wider text-ellipsis overflow-hidden text-nowrap"
+                          title={conversation.title}
+                        >
+                          {conversation.title}
+                        </span>
+                        {/* Botão de Pin que só aparece ao passar o mouse */}
+                        <button
+                          className="ml-auto text-sm pin-button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            togglePinConversation(conversation.chatId);
+                          }}
+                        >
+                           <PinOff size="18"/>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  <hr className="border-primary my-2" />
+                </>
+              )}
+
+              <h4 className="indent-2 text-muted-foreground text-xs font-bold mb-3">
                 Recentes
               </h4>
               <ul className="list-none p-0 m-0">
-                {filteredConversations.map((conversation) => (
+                {regularConversations.map((conversation) => (
                   <li
                     key={conversation.chatId}
                     className={clsx(
@@ -85,6 +137,16 @@ export const AppSidebar = () => {
                     >
                       {conversation.title}
                     </span>
+                    {/* Botão de Pin que só aparece ao passar o mouse */}
+                    <button
+                      className="ml-auto text-sm pin-button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        togglePinConversation(conversation.chatId);
+                      }}
+                    >
+                     <Pin size="18"/>
+                    </button>
                   </li>
                 ))}
               </ul>
