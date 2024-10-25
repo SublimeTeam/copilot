@@ -20,19 +20,13 @@ const app = express();
 app.use(cors());
 dotenv.config();
 
-const upload = multer({ dest: "uploads/" });
-
 const optimizeMessage = (message) => {
-  return message
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
+  return message.normalize("NFD").toLowerCase().trim();
 };
 
 const chatAi = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const chatAIModel = chatAi.getGenerativeModel({
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash",
   generationConfig: {
     temperature: 1,
     maxOutputTokens: 5000,
@@ -98,10 +92,24 @@ async function createEmbedding(text) {
     throw error;
   }
 }
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    // Ensure the file name is in UTF-8
+    const utf8FileName = Buffer.from(file.originalname, "latin1").toString(
+      "utf8"
+    );
+
+    cb(null, utf8FileName);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 // Endpoint para upload de arquivos
 // add support for csv files
-
 app.post("/upload", upload.single("file"), async (req, res) => {
   console.log("Request received:", req.body);
   console.log("File object:", req.file);
@@ -192,7 +200,7 @@ app.post("/message", express.json(), async (req, res) => {
       const prompt = `
         Create a title for the chat based on the user message provided.
         Answer in plain text without any markdown formatting or symbols.
-        Use the same language from the chat history.
+        Use the same language as the user message.
         User message: ${optimizedMessage}
       `;
 
@@ -213,18 +221,20 @@ app.post("/message", express.json(), async (req, res) => {
       .join("\n");
 
     const combinedContext = `
+      You are an assistant that answers questions about work instructions for support agents.
       Answer the question or message in a natural and conversational manner. Use the provided context to inform your response when applicable, but feel free to engage in general conversation when the message is not a question or does not require specific context.
       You should always use the Context information as a base to answer questions related to work instructions providing as much information as possible, but for general conversation, respond appropriately.
       Use the same language of the question. and avoid talking about random topics.
       Never ask the user to contact the support because he is a support agent.
+      If the user asks for a file, you may provide the link to download it formatted as a markdown link, they are located in the /chat/files url.
 
       Context: ${fileContext}
       
-      Chat history: ${chatHistory}
+      Chat_history: ${chatHistory}
       
       Question/Message: ${optimizedMessage}
       
-      Answer in markdown format, using markdown formatting options to make the response more readable. NEVER use html tags such as code, pre, etc. And substitute space scape for three spaces to create a new line. 
+      Answer in markdown format, use markdown formatting options to make the response more readable.
       Answer:
     `;
 
@@ -242,17 +252,19 @@ app.post("/message", express.json(), async (req, res) => {
     const chatHistoryWithResponse = `${chatHistory}\n${response.text()}`;
 
     const suggestionContext = `
-      Predict up to 4 relevant questions that the user may ask you by reading the context and chat history.
-      Only include questions relevant to the chat history and context.
-      If you can't generate any suggestions, return an empty string. Keep it concise, no long sentences, use plain text. 
-      All suggestions should start with the first word capitalized.
-      Never include questions that was already asked or answered in the chat history.
+      ALWAYS use the last message from the user in chat history to determine what language you should use.
+      Analyze the context and chat history to suggest up to 4 topics the user may want to ask about.
+      Suggestions must be strictly based on the information available in the context and chat history.
+      Do not include questions that have already been asked or answered.
+      If there are no relevant or new topics, return an empty string.
+      Be concise and use plain text, without long sentences. All suggestions should start with a capital letter and be comma-separated.
+      Avoid hypothetical or speculative questions. Only suggest topics you can answer based on the context.
 
       Context: ${fileContext}
 
-      Chat history: ${chatHistoryWithResponse}
+      Chat_history: ${chatHistoryWithResponse}
 
-      Answer should match the chat history language and be comma-separated like this: "Question 1, Question 2, Question 3, Question 4"
+       Answer in comma-separated format like this: "Topic 1, Topic 2, Topic 3, Topic 4".
       Answer:
     `;
 
@@ -285,6 +297,68 @@ app.post("/message", express.json(), async (req, res) => {
 // Endpoint para listar todas as conversas
 app.get("/chats", (req, res) => {
   res.json(chats);
+});
+
+// endpoint to soft delete a chat
+app.delete("/chats/:chatId", (req, res) => {
+  const { chatId } = req.params;
+  const chatIndex = chats.findIndex((chat) => chat.chatId === chatId);
+
+  if (chatIndex !== -1) {
+    chats[chatIndex].deleted_at = new Date().toISOString();
+    res.json({ message: "Conversa marcada como deletada com sucesso" });
+  } else {
+    res.status(404).json({ message: "Conversa não encontrada" });
+  }
+});
+
+// endpoint to pin a chat add the ability to unpin
+app.patch("/chats/:chatId/pin", (req, res) => {
+  const { chatId } = req.params;
+  const { pinned } = req.body;
+  const chatIndex = chats.findIndex((chat) => chat.chatId === chatId);
+
+  if (chatIndex !== -1) {
+    chats[chatIndex].pinned = pinned;
+    const message = pinned
+      ? "Conversa marcada como fixada com sucesso"
+      : "Conversa desmarcada como fixada com sucesso";
+    res.json({ message });
+  } else {
+    res.status(404).json({ message: "Conversa não encontrada" });
+  }
+});
+
+// endpoint to get all files in the uploads folder
+app.get("/files", (req, res) => {
+  fs.readdir("uploads/", (err, files) => {
+    if (err) {
+      return res.status(500).json({ error: "Error reading directory" });
+    }
+
+    const fileDetails = files.map((file) => {
+      const stats = fs.statSync(`uploads/${file}`);
+      return {
+        name: file,
+        size: stats.size,
+      };
+    });
+
+    res.json(fileDetails);
+  });
+});
+
+// endpoint to download a file from the uploads folder
+app.get("/files/:filename", (req, res) => {
+  const { filename } = req.params;
+  const filePath = `uploads/${filename}`;
+
+  // Set the correct headers for file download
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`
+  );
+  res.download(filePath);
 });
 
 app.listen(PORT, () => {

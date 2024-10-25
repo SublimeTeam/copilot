@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BotAvatar } from "../BotAvatar/index";
 import { LoggedInUserAvatar } from "../LoggedInUserAvatar/index";
 import Markdown from "react-markdown";
@@ -16,18 +16,30 @@ export const Messages = ({ messages }) => {
     setCopiedIndex(index);
     setTimeout(() => {
       setCopiedIndex(null);
-    }, 1000); 
+    }, 1000);
   };
 
   return (
     <ul className="contents">
       {messages.map((message, index) => (
         <li key={index} className="list-none mb-4 last:mb-10">
-          <div className={`flex gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+          <div
+            className={`flex gap-4 ${
+              message.role === "user" ? "justify-end" : "justify-start"
+            }`}
+          >
             {message.role === "user" ? (
               <>
                 <div className="max-w-[55ch] rounded-lg text-right">
-                  <Markdown>{message.content}</Markdown>
+                  <Markdown
+                    className="pt-[.35rem]"
+                    components={{
+                      code: ({ node, ...props }) => <span {...props} />,
+                      pre: ({ node, ...props }) => <span {...props} />,
+                    }}
+                  >
+                    {message.content}
+                  </Markdown>
                 </div>
                 <LoggedInUserAvatar />
               </>
@@ -35,7 +47,13 @@ export const Messages = ({ messages }) => {
               <>
                 <BotAvatar />
                 <div className="max-w-[55ch] rounded-lg text-left relative bg-gray-100 p-2">
-                  <Markdown className="rounded-lg pt-[.35rem] pr-[2rem] w-full break-words">
+                  <Markdown
+                    className="w-full rounded-lg pt-[.35rem] pr-[2rem] break-words"
+                    components={{
+                      code: ({ node, ...props }) => <span {...props} />,
+                      pre: ({ node, ...props }) => <span {...props} />,
+                    }}
+                  >
                     {message.content}
                   </Markdown>
                   <button
@@ -53,7 +71,7 @@ export const Messages = ({ messages }) => {
                         fill="currentColor"
                         className="h-5 w-5 text-gray-800"
                       >
-                        <path d="M13 9h8v13H3V2h10v7zm-3 3v5h2v-4h4v-2H10zm7-6.414L12.414 5H10v3h7V5.586zM8 0H0v16h2V2h6V0z"/>
+                        <path d="M13 9h8v13H3V2h10v7zm-3 3v5h2v-4h4v-2H10zm7-6.414L12.414 5H10v3h7V5.586zM8 0H0v16h2V2h6V0z" />
                       </svg>
                     )}
                   </button>

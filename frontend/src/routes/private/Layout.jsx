@@ -22,6 +22,7 @@ export const Layout = () => {
 
           <div className="flex w-full justify-center bg-background flex-col max-h-screen">
             <Header />
+
             <Outlet />
           </div>
         </ConversationProvider>
