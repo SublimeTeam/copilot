@@ -57,6 +57,34 @@ export const ConversationProvider = ({ children }) => {
     );
   };
 
+  const selectTicketChat = async (ticketId) => {
+    const conversation = conversations.find((conv) => conv.chatId === ticketId);
+
+    setIsLoading(true);
+
+    console.log("ticketId", conversations);
+
+    if (!conversation) {
+      try {
+        const response = await axios.post("/chat", { ticketId });
+        setConversations((prevConversations) => [
+          ...prevConversations,
+          { ...response },
+        ]);
+
+        // fetch conversations
+        const refetch = await axios.get("/chats");
+        setConversations(refetch?.data);
+      } catch (error) {
+        console.error("Error selecting ticket chat:", error);
+      }
+    }
+
+    setActiveConversationId(ticketId);
+    navigate(`/chat/${ticketId}`);
+    setIsLoading(false);
+  };
+
   const sendMessage = async (message) => {
     if (!message.trim()) return;
 
@@ -111,6 +139,7 @@ export const ConversationProvider = ({ children }) => {
     createNewConversation,
     sendMessage,
     setActiveConversationId,
+    selectTicketChat,
   };
 
   return (

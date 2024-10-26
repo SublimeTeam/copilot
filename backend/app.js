@@ -8,7 +8,7 @@ const mammoth = require("mammoth");
 const cors = require("cors"); // Import the cors package
 const csv = require("csv-parser"); // Add this line to import the csv-parser package
 const fs = require("fs"); // Add this line to handle file system operations
-const { defaultChats } = require("./data");
+const { defaultChats, tickets } = require("./data");
 
 // TODO: persistir chats em banco de dados
 const chats = defaultChats;
@@ -28,7 +28,7 @@ const chatAi = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const chatAIModel = chatAi.getGenerativeModel({
   model: "gemini-1.5-flash",
   generationConfig: {
-    temperature: 1,
+    temperature: 0.5,
     maxOutputTokens: 5000,
   },
 });
@@ -252,7 +252,7 @@ app.post("/message", express.json(), async (req, res) => {
     const chatHistoryWithResponse = `${chatHistory}\n${response.text()}`;
 
     const suggestionContext = `
-      ALWAYS use the last message from the user in chat history to determine what language you should use.
+      ALWAYS use the last user message language to communicate.
       Analyze the context and chat history to suggest up to 4 topics the user may want to ask about.
       Suggestions must be strictly based on the information available in the context and chat history.
       Do not include questions that have already been asked or answered.
@@ -264,7 +264,7 @@ app.post("/message", express.json(), async (req, res) => {
 
       Chat_history: ${chatHistoryWithResponse}
 
-       Answer in comma-separated format like this: "Topic 1, Topic 2, Topic 3, Topic 4".
+       Answer in comma-separated format like this: "Topico 1, Topico 2, Topico 3, Topico 4".
       Answer:
     `;
 
@@ -348,6 +348,37 @@ app.get("/files", (req, res) => {
   });
 });
 
+app.get("/tickets", (req, res) => {
+  const priorityOrder = {
+    "1 - Alto": 1,
+    "2 - Médio": 2,
+    "3 - Baixo": 3,
+    "4 - Planejamento": 4,
+  };
+
+  // Aberto, Atribuido, Em Andamento, Em espera, Resolvido, Fechado
+
+  const sortedTickets = tickets.sort((a, b) => {
+    // First, sort by status (Aberto tickets first)
+    if (a.status === "Em Andamento" && b.status !== "Em Andamento") return -1;
+    if (a.status !== "Em Andamento" && b.status === "Em Andamento") return 1;
+
+    // If both tickets have the same status, sort by priority
+    if (a.status === b.status) {
+      return priorityOrder[a.priority] - priorityOrder[b.priority];
+    }
+
+    // If statuses are different (and not "Aberto"), maintain their original order
+    // if statuses are different, check if one is "Aberto" and the other is not
+    if (a.status === "Aberto" && b.status !== "Aberto") return -1;
+    if (a.status !== "Aberto" && b.status === "Aberto") return 1;
+
+    return 0;
+  });
+
+  res.json(sortedTickets);
+});
+
 // endpoint to download a file from the uploads folder
 app.get("/files/:filename", (req, res) => {
   const { filename } = req.params;
@@ -359,6 +390,134 @@ app.get("/files/:filename", (req, res) => {
     `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`
   );
   res.download(filePath);
+});
+
+// endpoint para abrir um chat usando o ticketId como chatId
+app.post("/chat", express.json(), async (req, res) => {
+  console.log("Request received:", req.body);
+  const { ticketId } = req.body;
+  const chatFound = chats.find((chat) => chat.chatId === ticketId);
+
+  if (chatFound) {
+    res.json(chatFound);
+  }
+
+  try {
+    // get ticket by id
+    const ticket = tickets.find((ticket) => ticket.id === ticketId);
+
+    const ticketEmbedding = await createEmbedding(ticket.description);
+
+    const queryResponse = await index.query({
+      vector: ticketEmbedding,
+      topK: 4,
+      includeMetadata: true,
+    });
+
+    const fileContext = queryResponse.matches
+      .map((match) => match.metadata.content)
+      .join(" ");
+
+    const chat = {
+      chatId: ticketId,
+      title: ticket.id,
+      messages: [],
+    };
+    chats.push(chat);
+
+    console.log("chat 1", chat);
+
+    // Combine file context with chat history
+    const chatHistory = chat.messages
+      .map((msg) => `${msg?.role}: ${msg?.content}`)
+      .join("\n");
+
+    // concatenate ticket data using its properties and values
+    const ticketData = Object.entries(ticket)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join("\n");
+
+    const combinedContext = `
+      You are an assistant that answers questions about work instructions for support agents.
+      Answer the question or message in a natural and conversational manner. Use the provided context to inform your response when applicable, but feel free to engage in general conversation when the message is not a question or does not require specific context.
+      You should always use the Context information as a base to answer questions related to work instructions providing as much information as possible, but for general conversation, respond appropriately.
+      Use the same language of the question. and avoid talking about random topics.
+      Never ask the user to contact the support because he is a support agent.
+
+      Context: ${fileContext}
+      
+      Ticket data: ${ticketData}
+      
+      Question/Message: Utilizando essas informações, quais sao as possiveis soluções para este ticket? Forneça uma Instrução de trabalho caso disponível.
+      
+      Answer in markdown format, use markdown formatting options to make the response more readable.
+      Answer:
+    `;
+
+    let result;
+    if (chat.geminiChat) {
+      result = await chat.geminiChat.generateContent(combinedContext);
+    } else {
+      result = await chatAIModel.generateContent(combinedContext);
+    }
+
+    const response = await result.response;
+    // adicione a resposta da IA ao array de mensagens do chat
+    chat.messages.push({ role: "assistant", content: response.text() });
+
+    const chatHistoryWithResponse = `${chatHistory}\n${response.text()}`;
+
+    const suggestionContext = `
+      ALWAYS use the last message language to communicate.
+      Analyze the context and chat history to suggest up to 4 topics the user may want to ask about.
+      Suggestions must be strictly based on the information available in the context and chat history.
+      Do not include questions that have already been asked or answered.
+      If there are no relevant or new topics, return an empty string.
+      Be concise and use plain text, without long sentences. All suggestions should start with a capital letter and be comma-separated.
+      Avoid hypothetical or speculative questions. Only suggest topics you can answer based on the context.
+
+      Context: ${fileContext}
+
+      Chat_history: ${chatHistoryWithResponse}
+
+       Answer in comma-separated format like this: "Topic 1, Topic 2, Topic 3, Topic 4".
+      Answer:
+    `;
+
+    try {
+      const result = await flashAIModel.generateContent(suggestionContext);
+      const suggestion = result.response.text();
+
+      let suggestions = suggestion.replaceAll("\n", "").trim().split(", ");
+      console.log("suggestion", suggestion);
+
+      chat.messages.push({ role: "assistant", content: response.text() });
+
+      res.json({
+        response: response.text(),
+        chatId: ticketId,
+        title: ticket.id,
+        suggestions,
+      });
+    } catch (error) {
+      console.error("error", error);
+      res.json({
+        response: response.text(),
+        chatId: ticketId,
+        title: ticket.id,
+        suggestions: [],
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// endpoint to get a ticket by id
+app.get("/tickets/:ticketId", (req, res) => {
+  const { ticketId } = req.params;
+  const ticket = tickets.find((ticket) => ticket.id === ticketId);
+  res.json(ticket);
 });
 
 app.listen(PORT, () => {

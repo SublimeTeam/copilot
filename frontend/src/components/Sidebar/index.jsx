@@ -1,9 +1,17 @@
-import { MessageSquare, Bot, Search, Plus, Library } from "lucide-react";
+import {
+  MessageSquare,
+  Bot,
+  Search,
+  Plus,
+  Library,
+  StickyNote,
+  SquareCheckBig,
+} from "lucide-react";
 import { Button } from "../Button/index";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { useConversation } from "@/contexts/ConversationContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sidebar, SidebarMenuButton } from "../ui/sidebar";
 
 export const AppSidebar = () => {
@@ -20,10 +28,24 @@ export const AppSidebar = () => {
     conversation?.title?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  //fetch tickets and save into a useState
+  const [ticketsResolved, setTicketsResolved] = useState([]);
+
+  // fetch tickets from backend
+  useEffect(() => {
+    fetch("http://localhost:3000/tickets")
+      .then((response) => response.json())
+      .then((data) =>
+        setTicketsResolved(
+          data.filter((ticket) => ticket.closed_at).map((ticket) => ticket.id)
+        )
+      );
+  }, []);
+
   if (!conversations.length) return <div></div>;
 
   return (
-    <Sidebar>
+    <Sidebar className="z-20">
       <div className="bg-black  tracking-wide h-full">
         <div className="flex flex-col gap-5 h-full">
           <div className="flex items-center justify-between px-4 pt-3">
@@ -78,9 +100,21 @@ export const AppSidebar = () => {
                       navigate(`${conversation.chatId}`);
                     }}
                   >
-                    <MessageSquare className="min-w-4 w-4" />
+                    {conversation.chatId.includes("TASK") ? (
+                      ticketsResolved.includes(conversation.chatId) ? (
+                        <SquareCheckBig className="min-w-4 w-4" />
+                      ) : (
+                        <StickyNote className="min-w-4 w-4" />
+                      )
+                    ) : (
+                      <MessageSquare className="min-w-4 w-4" />
+                    )}
                     <span
-                      className="text-xs tracking-wider text-ellipsis overflow-hidden text-nowrap"
+                      className={clsx(
+                        "text-xs tracking-wider text-ellipsis overflow-hidden text-nowrap",
+                        ticketsResolved.includes(conversation.chatId) &&
+                          "line-through"
+                      )}
                       title={conversation.title}
                     >
                       {conversation.title}

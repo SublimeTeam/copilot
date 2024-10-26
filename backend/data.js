@@ -51,8 +51,134 @@ const defaultChats = [
       },
     ],
   },
+  {
+    chatId: "TASK0902990",
+    title: "TASK0902990",
+    messages: [
+      {
+        role: "assistant",
+        content:
+          'O usuário solicitou a troca de perfil no sistema Y. Para atender essa solicitação, siga os passos descritos na IT "ALTERAÇÃO DE PERFIL NO SISTEMA Y":\n\n1. **Colete as informações necessárias:**\n    * Nome Completo do colaborador;\n    * Usuário de acesso ao sistema;\n    * Ambiente que deseja alteração (QAS e PRD);\n    * Motivo da alteração de perfil;\n    * Grupo de acesso ou usuário cópia;\n    * Autorização do gerente imediato do colaborador.\n\n2. **Acesse o sistema via Internet Explorer utilizando o endereço ambiente de DESENVOLVIMENTO ou PRODUÇÃO.**\n3. **Faça logon utilizando o usuário e senha de ADMINISTRADOR.**\n4. **Clique em Configurações > Usuários.**\n5. **Clique sobre o usuário que deseja alterar o perfil.**\n6. **Informe o tipo de perfil desejado e clique em salvar.**\n\nLembre-se que a **revisão semestral de acessos** é realizada pelo Gestor do time de GQ-Digital. Caso a alteração seja parte dessa revisão, o processo será gerenciado pelo time de Digital - Acessos através de chamados no Sistema de ITSM de Digital. \n',
+      },
+
+      {
+        role: "user",
+        content: "Obrigado, consegui resolver o problema.",
+      },
+      {
+        role: "assistant",
+        content:
+          "De nada! 😊 Fico feliz em ter ajudado. Se precisar de mais alguma coisa, pode me chamar.",
+      },
+      {
+        role: "system",
+        content:
+          "Alterado o estado do chat para 'Fechado', com a seguinte resolução: Realizado conforme solicitado o espelhamento do perfil ",
+      },
+    ],
+  },
 ];
+
+// id
+// abertura
+// anexos
+// data de abertura
+// data de encerramento
+// descrição
+// tipo - Incidentes, Problemas, Requisições, Mudanças
+// status - Aberto, Atribuido, Em Andamento, Em espera, Resolvido, Fechado
+// logs
+
+const tickets = [
+  {
+    id: "TASK0902990",
+    opened_at: "21/02/2024 15:57",
+    attachments: [],
+    updated_at: "01/05/2024 18:00",
+    closed_at: "01/05/2024 18:00",
+    description: "Troca de Perfil",
+    category: "Acessos",
+    subcategory: "Alteração de Perfil",
+    item: "Troca de Perfil",
+    system: "SAP",
+    group: "N1-OUTROS",
+    service: "Service Desk",
+    assignee: "Analista Service Desk",
+    priority: "3 - Baixo",
+    resolution_date: "01/05/2024 18:00",
+    requester: "ADM Sistemas",
+    location: "Centro de Distribuição",
+    type: "Incidentes",
+    status: "Fechado",
+    logs: [],
+  },
+
+  {
+    id: "TASK0946794",
+    opened_at: "25/10/2024 14:44",
+    attachments: [],
+    updated_at: "25/10/2024 14:44",
+    closed_at: "",
+    description: "Não consigo logar em minha maquina",
+    category: "Acessos",
+    subcategory: "Reset/Desbloqueio de Senha",
+    item: "Reset/Desbloqueio de Senha de Sistemas",
+    system: "SAP PORTAL",
+    group: "N1-ACESSOS",
+    service: "Acesso",
+    assignee: "Analista Acesso",
+    priority: "1 - Alto",
+    resolution_date: "",
+    requester: "ADM Sistemas",
+    location: "Escritório central",
+    type: "Reset/Desbloqueio de Senha",
+    status: "Em Andamento",
+    logs: [
+      "Aguardando atendimento",
+      "Em atendimento",
+      "Enviar evidencias",
+      "Evidencias Anexadas",
+      "Problema Persiste",
+    ],
+  },
+  {
+    id: "TASK0902920",
+    opened_at: "21/02/2024 15:57",
+    attachments: [],
+    updated_at: "01/05/2024 18:00",
+    closed_at: "01/05/2024 18:00",
+    description: "Criar usuário de rede",
+    category: "Acessos",
+    subcategory: "Liberação de Acesso",
+    item: "Criação de Acesso",
+    system: "Com SAP",
+    group: "N1-OUTROS",
+    service: "Service Desk",
+    assignee: "Analista Service Desk",
+    priority: "3 - Baixo",
+    resolution_date: "01/05/2024 18:00",
+    requester: "ADM Sistemas",
+    location: "Centro de Distribuição",
+    type: "Incidentes",
+    status: "Fechado",
+    logs: [
+      "Aguardando atendimento",
+      "Em atendimento",
+      "Enviar evidencias",
+      "Evidencias Anexadas",
+      "Problema Persiste",
+      "Acionando Nivel 2",
+      "Acionando Nvel 3",
+      "Anexar aval e planilha de acesso",
+      "Realizado envio das informações solicitadas",
+      "Usuário de rede criado e enviado os dados ao gestor imediato",
+    ],
+  },
+];
+
+// Acessos	Liberação de Acesso	Criação de Acesso	Com SAP	N1-OUTROS	Service Desk	Analista Service Desk	3 - Baixo	01/05/2024 18:00:04	ADM Sistemas	Centro de Distribuição	Criar usuário de rede 	Aguardando atendimento 	Em atendimento	Enviar evidencias 	Evidencias Anexadas	Problema Persiste	Acionando Nivel 2 	Acionando Nvel 3 	Anexar aval e planilha de acesso 	Realizado envio das informações solicitadas	Usuário de rede criado e enviado os dados ao gestor imediato
 
 module.exports = {
   defaultChats,
+  tickets,
 };

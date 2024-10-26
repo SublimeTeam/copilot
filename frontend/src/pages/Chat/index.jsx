@@ -1,16 +1,63 @@
+import { LoggedInUserAvatar } from "@/components/LoggedInUserAvatar/index";
 import { MessageInput } from "@/components/MessageInput/index";
 import { Messages } from "@/components/Messages/index";
 import { Suggestions } from "@/components/Suggestions/index";
+import { Ticket } from "@/components/Ticket/index";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { WelcomeWithOpenTickets } from "@/components/WelcomeWithOpenTickets/index";
 import { useConversation } from "@/contexts/ConversationContext";
 import "@/pages/Chat/animation.css";
+import { useEffect, useState } from "react";
+
+const TicketInfo = ({ ticketId }) => {
+  const [ticket, setTicket] = useState({});
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/tickets/${ticketId}`)
+      .then((res) => res.json())
+      .then((data) => setTicket(data));
+  }, [ticketId]);
+
+  return (
+    <>
+      {ticket.closed_at && (
+        <Alert
+          variant="destructive"
+          className="bg-background sticky top-0 z-20"
+        >
+          <AlertDescription>
+            Conversa relacionada a um ticket que foi marcado como{" "}
+            <strong>{ticket.status}</strong> em{" "}
+            <strong>{ticket.closed_at}</strong>
+          </AlertDescription>
+        </Alert>
+      )}
+      <div className="flex gap-4 justify-end">
+        <div className="max-w-[55ch] rounded-lg flex text-right">
+          <Ticket ticket={ticket} ticketId={ticketId} />
+        </div>
+        <LoggedInUserAvatar />
+      </div>
+    </>
+  );
+};
 
 export const Chat = () => {
-  const { conversations, activeConversationId, isLoading, sendMessage } =
-    useConversation();
+  const {
+    conversations,
+    activeConversationId,
+    isLoading,
+    sendMessage,
+    selectTicketChat,
+  } = useConversation();
 
   const handleSendMessage = async (message) => {
     await sendMessage(message);
+  };
+
+  const handleSelectTicket = async (ticketId) => {
+    console.log("ticketId", ticketId);
+    await selectTicketChat(ticketId);
   };
 
   const activeConversation = conversations.find(
@@ -22,9 +69,14 @@ export const Chat = () => {
       <div className="overflow-auto flex-1 ">
         <div className="mx-auto flex flex-col w-[660px] gap-8">
           {activeConversation ? (
-            <Messages messages={activeConversation?.messages} />
+            <>
+              {activeConversationId?.includes("TASK") && (
+                <TicketInfo ticketId={activeConversationId} />
+              )}
+              <Messages messages={activeConversation?.messages} />
+            </>
           ) : (
-            <WelcomeWithOpenTickets />
+            <WelcomeWithOpenTickets onSelectTicket={handleSelectTicket} />
           )}
         </div>
       </div>
@@ -37,7 +89,7 @@ export const Chat = () => {
       >
         <div className="pt-5">
           {isLoading && (
-            <p className="loading">
+            <p className="text-sm loading">
               Copilot está digitando
               <span className="dot">.</span>
               <span className="dot">.</span>
