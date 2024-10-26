@@ -8,6 +8,7 @@ import {
 import { Outlet } from "react-router-dom";
 import { Button } from "@/components/Button";
 import { useNavigate } from "react-router-dom";
+import { BotAvatar } from "@/components/BotAvatar/index";
 
 const links = [
   {
@@ -61,10 +62,10 @@ const Header = () => {
   return (
     <header className="flex items-center justify-between">
       <a href="/" className="text-md">
-      <div style={{ display: "flex", alignItems: "center" }}>
-      <img src="/copilot.png" alt="Copiloto" style={{ width: "50px", height: "auto" }} />
-      <span style={{ marginLeft: "10px", fontSize: "16px" }}>Copiloto</span>
-</div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <BotAvatar />
+          <span style={{ marginLeft: "10px", fontSize: "16px" }}>Copiloto</span>
+        </div>
       </a>
       <Navigation />
     </header>
