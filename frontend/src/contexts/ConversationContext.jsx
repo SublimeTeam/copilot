@@ -132,6 +132,16 @@ export const ConversationProvider = ({ children }) => {
     }
   };
 
+  const togglePinConversation = (conversationId) => {
+    setConversations((prevConversations) =>
+      prevConversations.map((conv) =>
+        conv.chatId === conversationId
+          ? { ...conv, pinned: !conv.pinned }
+          : conv
+      )
+    );
+  };
+
   const value = {
     conversations,
     activeConversationId,
@@ -140,6 +150,7 @@ export const ConversationProvider = ({ children }) => {
     sendMessage,
     setActiveConversationId,
     selectTicketChat,
+    togglePinConversation,
   };
 
   return (
